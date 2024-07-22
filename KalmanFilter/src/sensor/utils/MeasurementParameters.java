@@ -18,6 +18,15 @@ public class MeasurementParameters {
 	public final static double mu = 0;
 	public final static double sigma = 0.01;
 	
+	public final static double mu_R = 0;
+	public final static double sigma_R = 0.1;
+	
+	public final static double mu_theta = 0;
+	public final static double sigma_theta = 0.01;
+	
+	public final static double mu_phi = 0;
+	public final static double sigma_phi = 0.01;
+	
 	public static double[][] matrixF(double dt) {
 		double[][] matrixF = new double[9][9];
 	    matrixF[0][0] = 1; matrixF[0][1] = 0; matrixF[0][2] = 0; matrixF[0][3] = 0; matrixF[0][4] = 0; matrixF[0][5] = 0; matrixF[0][6] = 0; matrixF[0][7] = 0; matrixF[0][8] = 0;

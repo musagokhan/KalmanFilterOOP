@@ -44,13 +44,14 @@ public class CreateMeasurementWithTime {
 		double y = this.measurementCartesianCoordinatePure[1];
 		double z = this.measurementCartesianCoordinatePure[2];
 		
-		double r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
-		double theta = Math.atan2(y, x); // radyan
-		double phi = Math.acos(z / r);   // radyan
-		double thetaDegree = Math.toDegrees(theta);
-		double phiDegree  = Math.toDegrees(phi);
-        System.out.println("theta : " + theta +  " / "  + thetaDegree);
-        System.out.println("phi   : " + phi   +  " / "  + phiDegree);
+		double r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)) + gausianNoiseCreateForR();
+		double theta = Math.atan2(y, x) + gausianNoiseCreateForTheta(); // radyan
+		double phi = Math.acos(z / r) + gausianNoiseCreateForPhi();   // radyan
+//		double thetaDegree = Math.toDegrees(theta);
+//		double phiDegree  = Math.toDegrees(phi);
+//        System.out.println("theta : " + theta +  " / "  + thetaDegree);
+//        System.out.println("phi   : " + phi   +  " / "  + phiDegree);
+		
         
 		this.measurementGlobalCoordinateWithTime = new double[] { r, theta, phi , this.lastTime};
 		
@@ -101,14 +102,23 @@ public class CreateMeasurementWithTime {
 
         return result;
     }
-	    
-    private double gausianNoiseCreate() {
-    	
+    
+    private double gausianComman(double Mu, double Sigma) {
     	Random random = new Random();
-    	double z1 = random.nextGaussian(); 
-    	double z2 = random.nextGaussian(); 
-    	return sensor.utils.MeasurementParameters.mu + sensor.utils.MeasurementParameters.sigma * (z1 + z2); 
+    	double value1 = random.nextGaussian(); 
+    	double value2 = random.nextGaussian(); 
+    	return Mu + Sigma * (value1 + value2);
     }
+	    
+    private double gausianNoiseCreate() {return gausianComman(MeasurementParameters.mu, MeasurementParameters.sigma);}
+    
+    private double gausianNoiseCreateForR() {return gausianComman(MeasurementParameters.mu_R, MeasurementParameters.sigma_R);}
+    
+    private double gausianNoiseCreateForTheta() {return gausianComman(MeasurementParameters.mu_theta, MeasurementParameters.sigma_theta);}
+   
+    private double gausianNoiseCreateForPhi() {return gausianComman(MeasurementParameters.mu_phi, MeasurementParameters.sigma_phi);}
+       
+    
         
 	public double[] measurementCartesian (double lastTime) {
 //		System.out.println("LOG - / measurementCartesian");
