@@ -15,8 +15,9 @@ public class MainOperation {
 		for (int workStep=0; workStep < utils.KFConstant.lastWorkStep ; workStep++) {
 			
 			double currentTime = createTimeBrand.getTimeCalculation(); // random time
-			double[] measurement = createMeasurementWithTime.measurement(currentTime);   // with time			
-			double[] kFInitationStatus = kFInitation.getMainKFInitation(measurement);
+			double[] measurementCartesian = createMeasurementWithTime.measurementCartesian(currentTime);   // with time	
+//			double[] measurementGlobal = createMeasurementWithTime.measurementGlobal(currentTime);   // with time	
+			double[] kFInitationStatus = kFInitation.getMainKFInitation(measurementCartesian);
 			
 			if (kFInitationStatus != null) {
 				System.out.println(workStep + ".Adým  kalman baslasin artik");

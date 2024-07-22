@@ -8,8 +8,8 @@ public class MeasurementParameters {
 	public final static double yPositionForStartingMeasurement = 0;
 	public final static double zPositionForStartingMeasurement = 0;
 	public final static double xSpeedForStartingMeasurement = 1;
-	public final static double ySpeedForStartingMeasurement = 2; 
-	public final static double zSpeedForStartingMeasurement = 3;
+	public final static double ySpeedForStartingMeasurement = 1; 
+	public final static double zSpeedForStartingMeasurement = 1;
 	public final static double xAccelerationForStartingMeasurement = 0;
 	public final static double yAccelerationForStartingMeasurement = 0;
 	public final static double zAccelerationForStartingMeasurement = 0;
