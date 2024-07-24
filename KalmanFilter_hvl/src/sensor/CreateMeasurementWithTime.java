@@ -68,7 +68,7 @@ public class CreateMeasurementWithTime {
 	}
 		
 	private void show() {
-        System.out.print("Sonu� Matrisi :  ");
+        System.out.print("Sonuc Matrisi :  ");
         for (int i = 0; i < this.allKinematics.length; i++) {
             for (int j = 0; j < this.allKinematics[i].length; j++) {
                 System.out.print(this.allKinematics[i][j] + " ");

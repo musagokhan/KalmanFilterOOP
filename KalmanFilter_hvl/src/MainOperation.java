@@ -1,8 +1,9 @@
-import Domain.KF;
+import java.util.Arrays;
+
+import kf.KF;
 import kf.KFInitation;
 import sensor.CreateMeasurementWithTime;
 import sensor.CreateTimeBrand;
-import kf.utils.KFStartingParam;
 import kf.utils.*;
 
 public class MainOperation {
@@ -17,18 +18,24 @@ public class MainOperation {
 		boolean firstStepFlag = true;
 		KF track0 = null; // nesne ilk tanımı. ataması için gerekli olan girdi asagida ilk kez uretilecek o zamn kullanacagim.
 		
+//		double[] track0 = null;
+		
 		for (int workStep=0; workStep < KFConstant.lastWorkStep ; workStep++) {
 			
 			double currentTime = createTimeBrand.getTimeCalculation(); // random time
 			double[] measurementCartesian = createMeasurementWithTime.measurementCartesian(currentTime);   // with time	
 //			double[] measurementGlobal = createMeasurementWithTime.measurementGlobal(currentTime);   // with time	
-			double[] kFInitationStatus = kFInitation.getMainKFInitation(measurementCartesian);
+			
+			double[][] kFInitationStatus = new double[][] {{ 0.0, 1.0, 0.03 }}; // kFInitation.getMainKFInitation(measurementCartesian);
+			
+			System.out.println("1 stateVector    : " +  Arrays.toString(kFInitationStatus));
 			
 			if (kFInitationStatus != null) {
 				System.out.println(workStep + ".Adim  kalman baslasin artik");
 				if (firstStepFlag) {// ilk adim nesne olustur.
 					firstStepFlag = false;
-					track0 = new KF(kFInitationStatus); // icerige eriistigim icin burada koydum.
+					track0 = new KF(kFInitationStatus, 1); // icerige eriistigim icin burada koydum. delta=1
+//					track0 = new double[] { 1.0, 2.0, 3.0 };
 				}
 				track0.getKFPredicted(1);
 			} else {				
@@ -40,7 +47,7 @@ public class MainOperation {
 
 		
 	
-//		double[] track0StateVector = KFStartingParam.track0StateVector;
+//		double[] track0StateVector = KFConstant.track0StateVector;
 		
 		
 		
@@ -64,16 +71,5 @@ public class MainOperation {
 		System.out.println("--- Kalman Filter Stop ---");
 	}
 	
-	
-	
-//	private void measurementManagament (double[] currentMeasurement) {
-//		int measuremetCounter = 0;
-//		boolean kfStatus  = false;
-//		
-//		if (measuremetCounter > 2 ) {
-//			
-//		} else
-//		
-//	}
 
 }
