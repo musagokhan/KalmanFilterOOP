@@ -20,9 +20,9 @@ public class MainOperation {
 			double[] kFInitationStatus = kFInitation.getMainKFInitation(measurementCartesian);
 			
 			if (kFInitationStatus != null) {
-				System.out.println(workStep + ".Ad�m  kalman baslasin artik");
+				System.out.println(workStep + ".Adim  kalman baslasin artik");
 			} else {
-				System.out.println(workStep + ".Ad�m  kalman'a var");
+				System.out.println(workStep + ".Adim  kalman'a var");
 			}
 			
 		}
