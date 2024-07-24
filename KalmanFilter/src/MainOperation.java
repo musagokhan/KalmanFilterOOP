@@ -1,7 +1,7 @@
 import kf.KFInitation;
 import sensor.CreateMeasurementWithTime;
 import sensor.CreateTimeBrand;
-
+import utils.*;
 
 public class MainOperation {
 
@@ -12,7 +12,7 @@ public class MainOperation {
 		CreateMeasurementWithTime createMeasurementWithTime = new CreateMeasurementWithTime();
 		KFInitation kFInitation = new KFInitation();
 		
-		for (int workStep=0; workStep < utils.KFConstant.lastWorkStep ; workStep++) {
+		for (int workStep=0; workStep < KFConstant.lastWorkStep ; workStep++) {
 			
 			double currentTime = createTimeBrand.getTimeCalculation(); // random time
 			double[] measurementCartesian = createMeasurementWithTime.measurementCartesian(currentTime);   // with time	
@@ -20,9 +20,9 @@ public class MainOperation {
 			double[] kFInitationStatus = kFInitation.getMainKFInitation(measurementCartesian);
 			
 			if (kFInitationStatus != null) {
-				System.out.println(workStep + ".Adým  kalman baslasin artik");
+				System.out.println(workStep + ".Adï¿½m  kalman baslasin artik");
 			} else {
-				System.out.println(workStep + ".Adým  kalman'a var");
+				System.out.println(workStep + ".Adï¿½m  kalman'a var");
 			}
 			
 		}
