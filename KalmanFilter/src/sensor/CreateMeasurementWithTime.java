@@ -68,7 +68,7 @@ public class CreateMeasurementWithTime {
 	}
 		
 	private void show() {
-        System.out.print("Sonuç Matrisi :  ");
+        System.out.print("Sonuï¿½ Matrisi :  ");
         for (int i = 0; i < this.allKinematics.length; i++) {
             for (int j = 0; j < this.allKinematics[i].length; j++) {
                 System.out.print(this.allKinematics[i][j] + " ");
@@ -121,16 +121,16 @@ public class CreateMeasurementWithTime {
     
         
 	public double[] measurementCartesian (double lastTime) {
-//		System.out.println("LOG - / measurementCartesian");
 		measurementCalculationCartesianCoordinate(lastTime);
-		System.out.println(Arrays.toString(this.measurementCartesianCoordinateWithTime));
+//		System.out.println("LOG - / measurementCartesian");
+//		System.out.println(Arrays.toString(this.measurementCartesianCoordinateWithTime));
 		return this.measurementCartesianCoordinateWithTime;
 	}
 	
 	public double[] measurementGlobal (double lastTime) {
-//		System.out.println("LOG - / measurementGlobal");
 		measurementCalculationGlobalCoordinate(lastTime);
-		System.out.println(Arrays.toString(this.measurementGlobalCoordinateWithTime));
+//		System.out.println("LOG - / measurementGlobal");
+//		System.out.println(Arrays.toString(this.measurementGlobalCoordinateWithTime));
 		return this.measurementCartesianCoordinateWithTime;
 	}
 

@@ -1,16 +1,21 @@
+import Domain.KF;
 import kf.KFInitation;
 import sensor.CreateMeasurementWithTime;
 import sensor.CreateTimeBrand;
-import utils.*;
+import kf.utils.KFStartingParam;
+import kf.utils.*;
 
 public class MainOperation {
 
 	public static void main(String[] args) {
 		System.out.println("--- Kalman Filter Start ---");
-		
+	
 		CreateTimeBrand createTimeBrand = new CreateTimeBrand();
 		CreateMeasurementWithTime createMeasurementWithTime = new CreateMeasurementWithTime();
 		KFInitation kFInitation = new KFInitation();
+		
+		boolean firstStepFlag = true;
+		KF track0 = null; // nesne ilk tanımı. ataması için gerekli olan girdi asagida ilk kez uretilecek o zamn kullanacagim.
 		
 		for (int workStep=0; workStep < KFConstant.lastWorkStep ; workStep++) {
 			
@@ -21,30 +26,24 @@ public class MainOperation {
 			
 			if (kFInitationStatus != null) {
 				System.out.println(workStep + ".Adim  kalman baslasin artik");
-			} else {
+				if (firstStepFlag) {// ilk adim nesne olustur.
+					firstStepFlag = false;
+					track0 = new KF(kFInitationStatus); // icerige eriistigim icin burada koydum.
+				}
+				track0.getKFPredicted(1);
+			} else {				
 				System.out.println(workStep + ".Adim  kalman'a var");
 			}
 			
 		}
 		
-		
-//		CreateTimeBrand createTimeBrand = new CreateTimeBrand();
-//		CreateMeasurementWithTime createMeasurementWithTime = new CreateMeasurementWithTime();
-//		
-//		for (int i =0; i<5 ; i++) {
-//			double currentTime = createTimeBrand.getTimeCalculation(); // random time
-//			double[] measurement = createMeasurementWithTime.measurement(currentTime);   // with time
-//		}
 
-		
-		
-//		createMeasurementWithTime.measurement(2);
-//		createMeasurementWithTime.measurement(7);
 		
 	
 //		double[] track0StateVector = KFStartingParam.track0StateVector;
-//		
-//		KF track0 = new KF(track0StateVector);
+		
+		
+		
 //		System.out.println("init track0 : " + track0);
 //
 //		double[] track1StateVector = {posX+1, posY-1, posZ+10, speedX, speedY, speedZ, accelerationX, accelerationY, accelerationZ};

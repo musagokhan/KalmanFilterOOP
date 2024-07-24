@@ -1,32 +1,44 @@
 package Domain;
 
-import Utils.MathOperation;
+import java.util.Arrays;
+
+import kf.utils.KFConstant;
+import kf.utils.MathOperation;
+
 
 public class KF {
-	
-	private double[] positionList;
-	private double[] speedList;
-	private double[] accelerationList;
+		
+	private double[] positionArray;
+	private double[] speedArray;
+	private double[] accelerationArray;
 	
 	private double[] stateVector;
+	
+	private final int operationalDimension;
 
 		
 	public KF(double[] stateVector) {
 		
 		this.stateVector = stateVector;
-		this.positionList = new double[3];
-		this.speedList = new double[3];
-		this.accelerationList = new double[3];
+		this.operationalDimension = this.stateVector.length / KFConstant.diffParametersNumberInStateVector;
+		this.positionArray = new double[this.operationalDimension];
+		this.speedArray = new double[this.operationalDimension];
+		this.accelerationArray = new double[this.operationalDimension];
+		
+		constructerlLogs();        
+		
 	}
 	
 	
 	private void KFPredicted(double deltaTime) {		
-		
-		System.arraycopy(this.stateVector, 0, this.positionList, 0, 3);
-        System.arraycopy(this.stateVector, 3, this.speedList, 0, 3);
-        System.arraycopy(this.stateVector, 6, this.accelerationList, 0, 3);
-		
-		this.stateVector = MathOperation.getstateVectorLastStepCalculator(this.positionList, this.speedList, this.accelerationList, deltaTime);
+
+		System.arraycopy(this.stateVector, this.operationalDimension*0 , this.positionArray     , 0, this.operationalDimension);
+        System.arraycopy(this.stateVector, this.operationalDimension*1 , this.speedArray        , 0, this.operationalDimension);
+        System.arraycopy(this.stateVector, this.operationalDimension*2 , this.accelerationArray , 0, this.operationalDimension);
+        
+        KFPredictedLogs();
+        	
+		//this.stateVector = MathOperation.getstateVectorLastStepCalculator(this.positionList, this.speedList, this.accelerationList, deltaTime);
 	}	
 	
 	
@@ -46,6 +58,24 @@ public class KF {
 				" ,Ax : " + this.stateVector[6] +
 				" ,Ay : " + this.stateVector[7] +
 				" ,Az : " + this.stateVector[8] ;
+	}
+	
+	
+	private void constructerlLogs() {
+		System.out.println("KFConstant.dimension    : " + (KFConstant.diffParametersNumberInStateVector));
+		System.out.println("this.stateVector        : " + Arrays.toString(this.stateVector));
+		System.out.println("this.stateVector.length : " + (this.stateVector.length));
+	    System.out.println("KFConstant.dimension    : " + (KFConstant.diffParametersNumberInStateVector));
+        System.out.println("operationalDimension    : " + (this.operationalDimension));
+        System.out.println("operationalDimension x2 : " + (this.operationalDimension*2));
+        System.out.println("operationalDimension x3 : " + (this.operationalDimension*3));
+	}
+	
+	private void KFPredictedLogs() {
+        System.out.println("0ALLLL : " + Arrays.toString(this.stateVector));
+        System.out.println("0/ 0-3 : " + Arrays.toString(this.positionArray));
+        System.out.println("3/ 0-3 : " + Arrays.toString(this.speedArray));
+        System.out.println("6/ 0-3 : " + Arrays.toString(this.accelerationArray));
 	}
 
 }
