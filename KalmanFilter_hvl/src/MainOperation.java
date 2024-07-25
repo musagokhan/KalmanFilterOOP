@@ -23,15 +23,13 @@ public class MainOperation {
 		for (int workStep=0; workStep < KFConstant.lastWorkStep ; workStep++) {
 			
 			double currentTime = createTimeBrand.getTimeCalculation(); // random time
-			double[] measurementCartesian = createMeasurementWithTime.measurementCartesian(currentTime);   // with time	
-//			double[] measurementGlobal = createMeasurementWithTime.measurementGlobal(currentTime);   // with time	
-			
-			double[][] kFInitationStatus = new double[][] {{ 0.0, 1.0, 0.03 }}; // kFInitation.getMainKFInitation(measurementCartesian);
-			
-			System.out.println("1 stateVector    : " +  Arrays.toString(kFInitationStatus));
+			double[] measurementCartesian = createMeasurementWithTime.measurementCartesian(currentTime);	// with time	"Cartesian Coordinate Measurement"
+//			double[] measurementGlobal = createMeasurementWithTime.measurementGlobal(currentTime);   		// with time	"Global Coordinate Measurement"
+			double[][] kFInitationStatus = kFInitation.getMainKFInitation(measurementCartesian);
+//			System.out.println("Main.stateVector    : " +  Arrays.deepToString(kFInitationStatus));
 			
 			if (kFInitationStatus != null) {
-				System.out.println(workStep + ".Adim  kalman baslasin artik");
+				System.out.println("   " + workStep + ".Step Kalman phase");
 				if (firstStepFlag) {// ilk adim nesne olustur.
 					firstStepFlag = false;
 					track0 = new KF(kFInitationStatus, 1); // icerige eriistigim icin burada koydum. delta=1
@@ -39,7 +37,7 @@ public class MainOperation {
 				}
 				track0.getKFPredicted(1);
 			} else {				
-				System.out.println(workStep + ".Adim  kalman'a var");
+				System.out.println("   " + workStep + ".Step waiting to Kalman. Sniff Meas and calculating initStateVector");
 			}
 			
 		}

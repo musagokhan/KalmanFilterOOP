@@ -22,18 +22,52 @@ public class KFConstant {
 	
 	public static final int lastWorkStep = 10;
 	
+	public static final int sniffMeasNumForInitStateVector = 3;
+	
 	
 	
 	private static double[][] matrixA;
 
     public static double[][] getMatrixA(int dimension, double deltaT) {
+    	double t_v = deltaT;
+    	double t_a = 0.5 * Math.sqrt(Math.pow(deltaT, 2));
+    	
         if (dimension == 1) {
+//        	System.out.println("KFConstant / dimension == 1");
             matrixA = new double[][] {
-                {1.0, deltaT, 0.5 * Math.sqrt(Math.pow(deltaT, 2))	},
-                {0.0, 1.0   , deltaT								},
-                {0.0, 0.0   , 1.0									},
+                {1.0, t_v, t_a},
+                {0.0, 1.0, t_v},
+                {0.0, 0.0, 1.0},
             };
+        }else if (dimension == 2) {
+//        	System.out.println("KFConstant / dimension == 2");
+        	matrixA = new double[][] {
+                {1.0, 0.0, t_v, 0.0, t_a, 0.0},
+                {0.0, 1.0, 0.0, t_v, 0.0, t_a},
+                {0.0, 0.0, 1.0, 0.0, t_v, 0.0},
+                {0.0, 0.0, 0.0, 1.0, 0.0, t_v},
+                {0.0, 0.0, 0.0, 0.0, 1.0, 0.0},
+                {0.0, 0.0, 0.0, 0.0, 0.0, 1.0},
+            };
+        }else if (dimension == 3) {       	
+//        	System.out.println("KFConstant / dimension == 3");
+        	matrixA = new double[][] {
+                {1.0, 0.0, 0.0, t_v, 0.0, 0.0, t_a, 0.0, 0.0},
+                {0.0, 1.0, 0.0, 0.0, t_v, 0.0, 0.0, t_a, 0.0},
+                {0.0, 0.0, 1.0, 0.0, 0.0, t_v, 0.0, 0.0, t_a},
+                {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, t_v, 0.0, 0.0},
+                {0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, t_v, 0.0},
+                {0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, t_v},
+                {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0},
+                {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0},
+                {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0},
+            };
+        }else  {
+        	System.out.println("!!! STOP SoftWare : java.lang.NullPointerException !!!");
+        	System.out.println("dimension max value = 3. Check your StateVector and association");
         }
+        
+//        System.out.println("KFConstant / matrixA  [2.matrix] : " +  Arrays.deepToString(matrixA));
         
         return matrixA;
     }

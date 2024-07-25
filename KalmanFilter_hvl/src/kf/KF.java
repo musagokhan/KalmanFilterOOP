@@ -25,27 +25,16 @@ public class KF {
 		this.positionArray = new double[this.operationalDimension];
 		this.speedArray = new double[this.operationalDimension];
 		this.accelerationArray = new double[this.operationalDimension];
-		
-		System.out.println("K stateVector    : " +  Arrays.toString(this.stateVector));
-		
+				
 		//constructerlLogs();        
-		
 	}
 	
 	
 	private void KFPredicted(double deltaTime) {		
-
-//		System.arraycopy(this.stateVector, this.operationalDimension*0 , this.positionArray     , 0, this.operationalDimension);
-//        System.arraycopy(this.stateVector, this.operationalDimension*1 , this.speedArray        , 0, this.operationalDimension);
-//        System.arraycopy(this.stateVector, this.operationalDimension*2 , this.accelerationArray , 0, this.operationalDimension);
-//        
-        //KFPredictedLogs();
-        
-        System.out.println("O stateVector    : " +  Arrays.toString(this.stateVector));
-        System.out.println();
+       
+        System.out.println("O stateVector    : " +  Arrays.deepToString(this.stateVector));
         this.stateVector = MathOperation.getStateVectorCalculateForKFPrediction(this.stateVector, this.operationalDimension, deltaT);
-        System.out.println("S stateVector    : " +  Arrays.toString(this.stateVector));	
-		//this.stateVector = MathOperation.getstateVectorLastStepCalculator(this.positionList, this.speedList, this.accelerationList, deltaTime);
+        System.out.println("S stateVector    : " +  Arrays.deepToString(this.stateVector));	
 	}	
 	
 	
@@ -53,8 +42,7 @@ public class KF {
 		KFPredicted(deltaTime);
 	}
 	
-	
-	
+
 	public String toString() {
 		return "x : "     + this.stateVector[0] +
 				" ,y : "  + this.stateVector[1] +
@@ -79,12 +67,4 @@ public class KF {
         System.out.println("operationalDimension x3 : " + (this.operationalDimension*3));
 	}
 	
-	private void KFPredictedLogs() {
-		System.out.println("KFPredictedLogs");
-        System.out.println("0ALLLL : " + Arrays.toString(this.stateVector));
-        System.out.println("0/ 0-3 : " + Arrays.toString(this.positionArray));
-        System.out.println("3/ 0-3 : " + Arrays.toString(this.speedArray));
-        System.out.println("6/ 0-3 : " + Arrays.toString(this.accelerationArray));
-	}
-
 }

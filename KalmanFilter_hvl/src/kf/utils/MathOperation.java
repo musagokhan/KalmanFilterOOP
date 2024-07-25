@@ -26,13 +26,9 @@ public class MathOperation {
 	}
 	*/
 	
-	private static double[][] stateVectorCalculateForKFPrediction (double[][] inputStateVector, int dimension, double deltaT) {
-		
-		System.out.println("1. matrix : " +  Arrays.toString(inputStateVector ));
-		System.out.println("2. matrix : " +  Arrays.toString(KFConstant.getMatrixA(dimension, deltaT)) );
-		
-		
-		//multiplyMatrices(inputStateVector , KFConstant.getMatrixA(dimension, deltaT) );
+	private static double[][] stateVectorCalculateForKFPrediction (double[][] inputStateVector, int dimension, double deltaT) {	
+//		System.out.println("1. matrix : " +  Arrays.deepToString(inputStateVector ));
+//		System.out.println("2. matrix : " +  Arrays.deepToString(KFConstant.getMatrixA(dimension, deltaT)) );
 		return multiplyMatrices(inputStateVector , KFConstant.getMatrixA(dimension, deltaT) );
 	}
 	
@@ -40,25 +36,18 @@ public class MathOperation {
 		return stateVectorCalculateForKFPrediction(inputStateVector, dimension, deltaT);
 	}
 	
-    private static double[][] multiplyMatrices(double[][] matrix1, double[][] matrix2) {
-    	
-    	System.out.println(" !!! multiplyMatrices !!! ");
-    	
-    	
-    	System.out.println("matrix1 :  " + Arrays.toString(matrix1));
-    	System.out.println("matrix2 :  " + Arrays.toString(matrix2));
-    	
+    private static double[][] multiplyMatrices(double[][] matrix1, double[][] matrix2) {    	
+//    	System.out.println(" !!! multiplyMatrices !!! ");
+//    	System.out.println("matrix1 :  " + Arrays.deepToString(matrix1));
+//    	System.out.println("matrix2 :  " + Arrays.deepToString(matrix2));    	
         int rows1 = matrix1.length;
         int cols1 = matrix1[0].length;
         int rows2 = matrix2.length;
-        int cols2 = matrix2[0].length;
-               
+        int cols2 = matrix2[0].length;                     
 
-        // Check if multiplication is possible
-//        if (cols1 != rows2) {
-//            throw new IllegalArgumentException("Matrices cannot be multiplied. Columns of first matrix must equal rows of second matrix.");
-//        }
-
+        if (cols1 != rows2) {
+            throw new IllegalArgumentException("!!! Matrices cannot be multiplied !!!. Columns of first matrix must equal rows of second matrix. Check : StateVector and associate");
+        }
          
         double[][] result = new double[rows1][cols2];  // Initialize resulting matrix
 
@@ -69,7 +58,7 @@ public class MathOperation {
                 }
             }
         }
-        System.out.println("-result :- : " +  Arrays.toString(result));
+//        System.out.println("-result :- : " +  Arrays.toString(result));
         return result;
     }
 }

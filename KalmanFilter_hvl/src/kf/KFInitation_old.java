@@ -2,11 +2,9 @@ package kf;
 
 import java.util.Arrays;
 
-import kf.utils.KFConstant;
-
-public class KFInitation {
+public class KFInitation_old {
 	
-	private double[][] initKinematicDatas;
+	private double[] initKinematicDatas;
 	private int storage =0;
 	private final int referanceMeasurementNumber = 3;
 	
@@ -15,14 +13,14 @@ public class KFInitation {
 	private double[] yPositionArray  = new double[referanceMeasurementNumber];
 	private double[] zPositionArray  = new double[referanceMeasurementNumber];
 	
-	public KFInitation() {
+	public KFInitation_old() {
 		
 	}
 	
-	private double[][] mainKFInitation(double[] currentMeasurement) {
+	private double[] mainKFInitation(double[] currentMeasurement) {
 		this.storage = this.storage + 1;
 		
-		if (this.storage < (KFConstant.sniffMeasNumForInitStateVector + 1) ) { //preparing phase
+		if (this.storage < 4) {
 			this.timeArray[this.storage -1] = currentMeasurement[3];
 			this.xPositionArray[this.storage -1] =  currentMeasurement[0];
 			this.yPositionArray[this.storage -1] = currentMeasurement[1];
@@ -38,14 +36,14 @@ public class KFInitation {
 			double[] zPositionDatas = kinematicsCalculate(this.zPositionArray[0], this.zPositionArray[1], this.zPositionArray[2] ,
 					this.timeArray[0], this.timeArray[1], this.timeArray[2]);
 			
-			this.initKinematicDatas = new double[][]{{
+			this.initKinematicDatas = new double[]{
 					xPositionDatas[0], yPositionDatas[0], zPositionDatas[0],
 					xPositionDatas[1], yPositionDatas[1], zPositionDatas[1],
 					xPositionDatas[2], yPositionDatas[2], zPositionDatas[2]
-			}};
+			};
 			
-			
-//			System.out.println("initKinematicDatas   : " +  Arrays.deepToString(this.initKinematicDatas));
+			System.out.println("Eski   : " +  Arrays.toString(this.initKinematicDatas));
+
 			return this.initKinematicDatas;
 		}
 		
@@ -65,7 +63,7 @@ public class KFInitation {
 		return (vB - vA)/(tC - tA);
 	}
 
-	public double[][] getMainKFInitation(double[] currentMeasurement) {
+	public double[] getMainKFInitation(double[] currentMeasurement) {
 		return mainKFInitation(currentMeasurement);
 	}
 }
