@@ -36,10 +36,38 @@ public class MathOperation {
 		return stateVectorCalculateForKFPrediction(inputStateVector, dimension, deltaT);
 	}
 	
-    private static double[][] multiplyMatrices(double[][] matrix1, double[][] matrix2) {    	
-//    	System.out.println(" !!! multiplyMatrices !!! ");
-//    	System.out.println("matrix1 :  " + Arrays.deepToString(matrix1));
-//    	System.out.println("matrix2 :  " + Arrays.deepToString(matrix2));    	
+    private static double[][] multiplyMatrices(double[][] matrix1, double[][] matrix2) {  
+//    private static double[][] multiplyMatrices(double[][] matrix1a, double[][] matrix2a) { 	
+//    	
+//    	double[][]  matrix1 = new double[][] {{10.0, 20.0, 30.0}};
+//    		
+//    	
+//    	double[][]  matrix2 = new double[][] {
+//            {1.0, 2.0, 3.0},
+//            {4.0, 5.0, 6.0},
+//            {7.0, 8.0, 9.0},
+//        };
+        
+        
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+    	System.out.println(" !!! multiplyMatrices !!! ");
+    	System.out.println("matrix1 :  " + Arrays.deepToString(matrix1));
+    	System.out.println("matrix2 :  " + Arrays.deepToString(matrix2));   
+    	
+    	System.out.println("Xx : " + matrix1[0][0]);
+    	System.out.println("Vx : " + matrix1[0][3]);
+    	System.out.println("Ax : " + matrix1[0][6]);
+    	System.out.println("");
+    	System.out.println("Xy : " + matrix1[0][1]);
+    	System.out.println("Vy : " + matrix1[0][4]);
+    	System.out.println("Ay : " + matrix1[0][7]);
+    	System.out.println("");
+    	System.out.println("Xy : " + matrix1[0][2]);
+    	System.out.println("Vy : " + matrix1[0][5]);
+    	System.out.println("Ay : " + matrix1[0][8]);
+    	
         int rows1 = matrix1.length;
         int cols1 = matrix1[0].length;
         int rows2 = matrix2.length;
@@ -58,7 +86,10 @@ public class MathOperation {
                 }
             }
         }
-//        System.out.println("-result :- : " +  Arrays.toString(result));
+        System.out.println("matrixA  X MatrixB  : " +  Arrays.deepToString(result));
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
         return result;
     }
 }
