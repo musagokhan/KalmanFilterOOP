@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.List;
 
 import kf.KF;
 import kf.KFInitation;
@@ -25,17 +26,19 @@ public class MainOperation {
 			double currentTime = createTimeBrand.getTimeCalculation(); // random time
 			double[] measurementCartesian = createMeasurementWithTime.measurementCartesian(currentTime);	// with time	"Cartesian Coordinate Measurement"
 //			double[] measurementGlobal = createMeasurementWithTime.measurementGlobal(currentTime);   		// with time	"Global Coordinate Measurement"
-			double[][] kFInitationStatus = kFInitation.getMainKFInitation(measurementCartesian);
-//			System.out.println("Main.stateVector    : " +  Arrays.deepToString(kFInitationStatus));
+			List<double[][]> kFInitationStatus = kFInitation.getMainKFInitation(measurementCartesian);
 			
-			if (kFInitationStatus != null) {
+			if (kFInitationStatus.get(0) != null) {
 				System.out.println("   " + workStep + ".Step Kalman phase");
 				if (firstStepFlag) {// ilk adim nesne olustur.
 					firstStepFlag = false;
 					track0 = new KF(kFInitationStatus, 1); // icerige eriistigim icin burada koydum. delta=1
 //					track0 = new double[] { 1.0, 2.0, 3.0 };
 				}
+//				System.out.println("Main.track0    : " +  track0);
 				track0.getKFPredicted(1);
+//				System.out.println("Main.track0    : " +  track0);
+
 			} else {				
 				System.out.println("   " + workStep + ".Step waiting to Kalman. Sniff Meas and calculating initStateVector");
 			}

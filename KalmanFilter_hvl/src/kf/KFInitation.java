@@ -1,12 +1,15 @@
 package kf;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import kf.utils.KFConstant;
 
 public class KFInitation {
 	
 	private double[][] initKinematicDatas;
+	private double[][] initCovarianceDatas;
+	private int operationalDimension;
 	private int storage =0;
 	private final int referanceMeasurementNumber = 3;
 	
@@ -15,19 +18,21 @@ public class KFInitation {
 	private double[] yPositionArray  = new double[referanceMeasurementNumber];
 	private double[] zPositionArray  = new double[referanceMeasurementNumber];
 	
-	public KFInitation() {
-		
-	}
+	List<double[][]> XandPmatrices = new ArrayList<>();
+
 	
-	private double[][] mainKFInitation(double[] currentMeasurement) {
+	public KFInitation() {}
+	
+	private void mainKFInitationForStateVector(double[] currentMeasurement) {
 		this.storage = this.storage + 1;
 		
 		if (this.storage < (KFConstant.sniffMeasNumForInitStateVector + 1) ) { //preparing phase
 			this.timeArray[this.storage -1] = currentMeasurement[3];
 			this.xPositionArray[this.storage -1] =  currentMeasurement[0];
 			this.yPositionArray[this.storage -1] = currentMeasurement[1];
-			this.zPositionArray[this.storage -1] = currentMeasurement[2];				
-			return null;
+			this.zPositionArray[this.storage -1] = currentMeasurement[2];		
+			this.initKinematicDatas = null;
+			this.initCovarianceDatas = null;
 		} else {
 			double[] xPositionDatas = kinematicsCalculate(this.xPositionArray[0], this.xPositionArray[1], this.xPositionArray[2] ,
 															this.timeArray[0], this.timeArray[1], this.timeArray[2]);
@@ -44,14 +49,19 @@ public class KFInitation {
 					xPositionDatas[2], yPositionDatas[2], zPositionDatas[2]
 			}};
 			
-			
-//			System.out.println("initKinematicDatas   : " +  Arrays.deepToString(this.initKinematicDatas));
-			return this.initKinematicDatas;
 		}
 		
 	}
 	
-	private double[] kinematicsCalculate (double xA, double xB, double xC, double tA, double tB, double tC) {
+	private double[][] mainKFInitationForCovarianceMatrix (){
+		this.initCovarianceDatas = new double[this.operationalDimension][this.operationalDimension ];
+		for (int i = 0; i < this.operationalDimension; i++) {
+			this.initCovarianceDatas[i][i] = 1;
+		}
+		return this.initCovarianceDatas;
+	}
+	
+ 	private double[] kinematicsCalculate (double xA, double xB, double xC, double tA, double tB, double tC) {
 		double v1 = (xB - xA)/(tB - tA);
 		double v2 = (xC - xB)/(tC - tB);
 		double v = (v2+v1)/2;
@@ -64,8 +74,20 @@ public class KFInitation {
 	private double accelerationCalculate (double vA, double vB, double tA, double tC) {
 		return (vB - vA)/(tC - tA);
 	}
-
-	public double[][] getMainKFInitation(double[] currentMeasurement) {
-		return mainKFInitation(currentMeasurement);
+	
+	public List<double[][]> getMainKFInitation(double[] currentMeasurement) {
+		
+		
+		
+		this.operationalDimension = (int) Math.pow( (currentMeasurement.length - 1), 2); // -1 for time
+				
+		mainKFInitationForStateVector(currentMeasurement);
+		mainKFInitationForCovarianceMatrix();
+		
+		this.XandPmatrices.add(0, this.initKinematicDatas);
+		this.XandPmatrices.add(1, this.initCovarianceDatas);
+		
+		return this.XandPmatrices;
 	}
+	
 }

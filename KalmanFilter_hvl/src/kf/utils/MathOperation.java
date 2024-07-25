@@ -4,69 +4,27 @@ import java.util.Arrays;
 import kf.utils.*;
 public class MathOperation {
 	
+	
 	private MathOperation() {}
 	
-	/*
-	private static double[] stateVectorLastStepCalculator(double[] positionList, double[] speedList, double[] accelerationList, double deltaT) {
-		
-		//List<Double> newStateVector = Arrays.asList(null, null, null, null, null, null);
-		double[] newStateVector = new double[positionList.length * 3];
-		
-		for (int step = 0; step < positionList.length ; step++) {
-			newStateVector[step]     = positionList.length + speedList[step] * deltaT + 0.5 * accelerationList[step] * deltaT * deltaT;
-			newStateVector[step + 3] = speedList.length + accelerationList[step] * deltaT;   
-			newStateVector[step + 6] = accelerationList[step];
-		}
-		
-		return newStateVector;
-	}
-	
-	public static double[] getstateVectorLastStepCalculator(double[] positionList, double[] speedList, double[] accelerationList, double deltaT) {
-		return stateVectorLastStepCalculator(positionList, speedList, accelerationList, deltaT);
-	}
-	*/
-	
-	private static double[][] stateVectorCalculateForKFPrediction (double[][] inputStateVector, int dimension, double deltaT) {	
+	private static double[][] multiplexWithAmatrixForKFPrediction (String Atype, double[][] inputStateVector, int dimension, double deltaT) {	
 //		System.out.println("1. matrix : " +  Arrays.deepToString(inputStateVector ));
 //		System.out.println("2. matrix : " +  Arrays.deepToString(KFConstant.getMatrixA(dimension, deltaT)) );
-		return multiplyMatrices(inputStateVector , KFConstant.getMatrixA(dimension, deltaT) );
+		return multiplyMatrices(inputStateVector , KFConstant.getMatrixA(Atype,dimension, deltaT) );
 	}
 	
-	public static double[][] getStateVectorCalculateForKFPrediction (double[][] inputStateVector, int dimension, double deltaT ) {
-		return stateVectorCalculateForKFPrediction(inputStateVector, dimension, deltaT);
+	
+	public static double[][] getMultiplexWithAmatrixForKFPrediction (String Atype, double[][] inputStateVector, int dimension, double deltaT ) {
+		return multiplexWithAmatrixForKFPrediction(Atype, inputStateVector, dimension, deltaT);
 	}
+	
+
 	
     private static double[][] multiplyMatrices(double[][] matrix1, double[][] matrix2) {  
-//    private static double[][] multiplyMatrices(double[][] matrix1a, double[][] matrix2a) { 	
-//    	
-//    	double[][]  matrix1 = new double[][] {{10.0, 20.0, 30.0}};
-//    		
-//    	
-//    	double[][]  matrix2 = new double[][] {
-//            {1.0, 2.0, 3.0},
-//            {4.0, 5.0, 6.0},
-//            {7.0, 8.0, 9.0},
-//        };
-        
-        
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-    	System.out.println(" !!! multiplyMatrices !!! ");
-    	System.out.println("matrix1 :  " + Arrays.deepToString(matrix1));
-    	System.out.println("matrix2 :  " + Arrays.deepToString(matrix2));   
-    	
-    	System.out.println("Xx : " + matrix1[0][0]);
-    	System.out.println("Vx : " + matrix1[0][3]);
-    	System.out.println("Ax : " + matrix1[0][6]);
-    	System.out.println("");
-    	System.out.println("Xy : " + matrix1[0][1]);
-    	System.out.println("Vy : " + matrix1[0][4]);
-    	System.out.println("Ay : " + matrix1[0][7]);
-    	System.out.println("");
-    	System.out.println("Xy : " + matrix1[0][2]);
-    	System.out.println("Vy : " + matrix1[0][5]);
-    	System.out.println("Ay : " + matrix1[0][8]);
+
+//    	System.out.println(" !!! multiplyMatrices !!! ");
+//    	System.out.println("matrix1 :  " + Arrays.deepToString(matrix1));
+//    	System.out.println("matrix2 :  " + Arrays.deepToString(matrix2));   
     	
         int rows1 = matrix1.length;
         int cols1 = matrix1[0].length;
@@ -86,10 +44,8 @@ public class MathOperation {
                 }
             }
         }
-        System.out.println("matrixA  X MatrixB  : " +  Arrays.deepToString(result));
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
+//        System.out.println("matrixA  X MatrixB  : " +  Arrays.deepToString(result));
+
         return result;
     }
 }
