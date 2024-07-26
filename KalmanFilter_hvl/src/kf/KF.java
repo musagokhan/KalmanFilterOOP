@@ -56,21 +56,22 @@ public class KF {
 	private double[][] inovationCalculate(double[][] measurement ) {
 		
 		System.out.println("");
-		System.out.println("LOG KFUP : measurement :" + Arrays.deepToString(measurement));
+		System.out.println("LOG KFUP : measurement " + measurement.length + "x" + measurement[0].length  + " : " + Arrays.deepToString(measurement));
 		
-		double[][]  predictedMeasurement =  MathOperation.getmultiplyMatrices(KFConstant.getHmatrix(this.operationalDimension), this.stateVector);
 		
-		System.out.println("LOG KFUP : predictedMeasurement :" + Arrays.deepToString(predictedMeasurement));
+		double[][]  predictedMeasurement =  MathOperation.getmultiplyMatrices(KFConstant.getHmatrix(this.operationalDimension), this.stateVector); // H*x
 		
-		this.inovationMatrix = MathOperation.getSubtractionMatrices(measurement, predictedMeasurement);
+		System.out.println("LOG KFUP : predictedMeasurement " + predictedMeasurement.length + "x" + predictedMeasurement[0].length  + " :"  + Arrays.deepToString(predictedMeasurement));
+		
+		this.inovationMatrix = MathOperation.getSubtractionMatrices(measurement, predictedMeasurement);  // z - z'
 				
-		System.out.println("LOG KFUP :  inovation n : " + Arrays.deepToString(this.inovationMatrix));
+		System.out.println("LOG KFUP :  inovation n " + this.inovationMatrix.length + "x" + this.inovationMatrix[0].length  + ": " + Arrays.deepToString(this.inovationMatrix));
 		
 		return null;
 	}
 	
 	private void KFUpdate(double[][] measurement){
-		//inovationCalculate(measurement); 
+		inovationCalculate(measurement); 
 		// S
 		// K 
 		

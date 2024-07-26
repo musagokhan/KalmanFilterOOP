@@ -23,11 +23,11 @@ public class KFInitation {
 	
 	public KFInitation() {}
 	
-	private void mainKFInitationForStateVector(double[][] currentMeasurement) {
+	private void mainKFInitationForStateVector(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.storage = this.storage + 1;
 		
-		if (this.storage < (KFConstant.sniffMeasNumForInitStateVector + 1) ) { //preparing phase
-			this.timeArray[this.storage -1] = currentMeasurement[3][0];
+		if (this.storage < (KFConstant.sniffMeasNumForInitStateVector + 1) ) { //preparing phase +1 next for FOR_LOOP
+			this.timeArray[this.storage -1] = currentMeasurementTime;
 			this.xPositionArray[this.storage -1] =  currentMeasurement[0][0];
 			this.yPositionArray[this.storage -1] = currentMeasurement[1][0];
 			this.zPositionArray[this.storage -1] = currentMeasurement[2][0];		
@@ -75,11 +75,11 @@ public class KFInitation {
 		return (vB - vA)/(tC - tA);
 	}
 	
-	public List<double[][]> getMainKFInitation(double[][] currentMeasurement) {
+	public List<double[][]> getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		
-		this.operationalDimension = (int) Math.pow( (currentMeasurement.length - 1), 2); // -1 for time
+		this.operationalDimension = (int) Math.pow( (currentMeasurement.length), 2); 
 				
-		mainKFInitationForStateVector(currentMeasurement);
+		mainKFInitationForStateVector(currentMeasurement, currentMeasurementTime);
 		mainKFInitationForCovarianceMatrix();
 		
 		this.XandPmatrices.add(0, this.initKinematicDatas);

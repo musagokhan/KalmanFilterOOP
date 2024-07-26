@@ -30,13 +30,20 @@ public class MainOperation {
 		for (int workStep=0; workStep < KFConstant.lastWorkStep ; workStep++) {
 			
 			double currentTime = createTimeBrand.getTimeCalculation(); // random time
-			double[][] measurementCartesian = createMeasurementWithTime.measurementCartesian(currentTime);	// with time	"Cartesian Coordinate Measurement"
+//			double[][] measurementCartesian = createMeasurementWithTime.measurementCartesian(currentTime);	// with time	"Cartesian Coordinate Measurement"
 //			double[][] measurementGlobal = createMeasurementWithTime.measurementGlobal(currentTime);   		// with time	"Global Coordinate Measurement"
 
+			List<Object> measurementCartesian = createMeasurementWithTime.measurementCartesian(currentTime);	// with time	"Cartesian Coordinate Measurement"
+			
+			
+			double measurementTime = (double) measurementCartesian.get(0); //(double[][]) measurementGlobal.get(0);
+			double[][] measurement = (double[][]) measurementCartesian.get(1);    //(double[][]) measurementGlobal.get(1);
+			 
+			
 //			System.out.println("LOG Main measurementCartesian : "  + Arrays.deepToString(measurementCartesian));
 			
 			// !!!!!!!!!! TODO !!!!!!!!!!!!! : 3 tip secim var. a)Random - b)OlcumDinleme c)Batch  sadeceb yaptım digerlerinide yapmaliyim. 1Interface 3sub-class tasarla
-			List<double[][]> kFInitationStatus = kFInitation.getMainKFInitation(measurementCartesian);			
+			List<double[][]> kFInitationStatus = kFInitation.getMainKFInitation(measurement , measurementTime);			
 //			System.out.println("X : " + Arrays.deepToString(kFInitationStatus.get(0)));
 //			System.out.println("P : " + Arrays.deepToString(kFInitationStatus.get(1)));
 			
@@ -55,7 +62,7 @@ public class MainOperation {
 //				System.out.println("Main: SV Aft KF Pre    : " +  Arrays.deepToString(track0.getStateVector()));
 //				System.out.println("Main: CM Aft KF Pre    : " +  Arrays.deepToString(track0.getCovarianceMatrix()));
 				
-				track0.getKFUpdate(measurementCartesian);
+				track0.getKFUpdate(measurement);
 				
 
 			} else {				
