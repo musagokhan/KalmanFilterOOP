@@ -6,12 +6,15 @@ import java.util.List;
 import kf.utils.KFConstant;
 import kf.utils.MathOperation;
 
-
+// !!! TODO : Interface 'e koy.
 public class KF {
 	
 	private double deltaT;	
 	private double[][] stateVector;
 	private double[][] covarianceMatrix;
+	
+	private double[][] inovationMatrix;
+	
 	private final int operationalDimension;
 	private String AorA_tr;
 		
@@ -20,7 +23,7 @@ public class KF {
 		this.deltaT = deltaT;
 		this.stateVector = XandPmatrices.get(0);
 		this.covarianceMatrix = XandPmatrices.get(1);
-		this.operationalDimension = this.stateVector[0].length / KFConstant.diffParametersNumberInStateVector;
+		this.operationalDimension = this.stateVector.length / KFConstant.diffParametersNumberInStateVector;
 		//constructerlLogs();        
 	}
 	
@@ -50,14 +53,33 @@ public class KF {
 		KFPredictedForCovarianceMatrix(deltaTime); // for CovarianceMatrix Predicted
 	}
 	
+	private double[][] inovationCalculate(double[][] measurement ) {
+		
+		System.out.println("");
+		System.out.println("LOG KFUP : measurement :" + Arrays.deepToString(measurement));
+		
+		double[][]  predictedMeasurement =  MathOperation.getmultiplyMatrices(KFConstant.getHmatrix(this.operationalDimension), this.stateVector);
+		
+		System.out.println("LOG KFUP : predictedMeasurement :" + Arrays.deepToString(predictedMeasurement));
+		
+		this.inovationMatrix = MathOperation.getSubtractionMatrices(measurement, predictedMeasurement);
+				
+		System.out.println("LOG KFUP :  inovation n : " + Arrays.deepToString(this.inovationMatrix));
+		
+		return null;
+	}
 	
-	
-	private void KFUpdate(){
+	private void KFUpdate(double[][] measurement){
+		//inovationCalculate(measurement); 
+		// S
+		// K 
+		
+		// X & P
 		
 	}
 	
-	public void getKFUpdate(){
-		KFUpdate();
+	public void getKFUpdate(double[][] measurement){
+		KFUpdate(measurement);
 	}
 	
 	

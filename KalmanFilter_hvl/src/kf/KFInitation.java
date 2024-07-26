@@ -23,14 +23,14 @@ public class KFInitation {
 	
 	public KFInitation() {}
 	
-	private void mainKFInitationForStateVector(double[] currentMeasurement) {
+	private void mainKFInitationForStateVector(double[][] currentMeasurement) {
 		this.storage = this.storage + 1;
 		
 		if (this.storage < (KFConstant.sniffMeasNumForInitStateVector + 1) ) { //preparing phase
-			this.timeArray[this.storage -1] = currentMeasurement[3];
-			this.xPositionArray[this.storage -1] =  currentMeasurement[0];
-			this.yPositionArray[this.storage -1] = currentMeasurement[1];
-			this.zPositionArray[this.storage -1] = currentMeasurement[2];		
+			this.timeArray[this.storage -1] = currentMeasurement[3][0];
+			this.xPositionArray[this.storage -1] =  currentMeasurement[0][0];
+			this.yPositionArray[this.storage -1] = currentMeasurement[1][0];
+			this.zPositionArray[this.storage -1] = currentMeasurement[2][0];		
 			this.initKinematicDatas = null;
 			this.initCovarianceDatas = null;
 		} else {
@@ -42,12 +42,12 @@ public class KFInitation {
 			
 			double[] zPositionDatas = kinematicsCalculate(this.zPositionArray[0], this.zPositionArray[1], this.zPositionArray[2] ,
 					this.timeArray[0], this.timeArray[1], this.timeArray[2]);
-			
-			this.initKinematicDatas = new double[][]{{
-					xPositionDatas[0], yPositionDatas[0], zPositionDatas[0],
-					xPositionDatas[1], yPositionDatas[1], zPositionDatas[1],
-					xPositionDatas[2], yPositionDatas[2], zPositionDatas[2]
-			}};
+
+			this.initKinematicDatas = new double[][]{
+				{xPositionDatas[0]}, {yPositionDatas[0]}, {zPositionDatas[0]},
+				{xPositionDatas[1]}, {yPositionDatas[1]}, {zPositionDatas[1]},				
+				{xPositionDatas[2]}, {yPositionDatas[2]}, {zPositionDatas[2]}
+			};
 			
 		}
 		
@@ -75,9 +75,7 @@ public class KFInitation {
 		return (vB - vA)/(tC - tA);
 	}
 	
-	public List<double[][]> getMainKFInitation(double[] currentMeasurement) {
-		
-		
+	public List<double[][]> getMainKFInitation(double[][] currentMeasurement) {
 		
 		this.operationalDimension = (int) Math.pow( (currentMeasurement.length - 1), 2); // -1 for time
 				

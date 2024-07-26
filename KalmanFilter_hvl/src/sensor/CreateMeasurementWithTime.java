@@ -11,9 +11,9 @@ public class CreateMeasurementWithTime {
 	private double deltaTime = 1;
 	
 	private int lastStep;	
-	private double[] measurementCartesianCoordinatePure = new double[MeasurementParameters.dimension];
-	private double[] measurementCartesianCoordinateWithTime = new double[MeasurementParameters.dimension];
-	private double[] measurementGlobalCoordinateWithTime = new double[MeasurementParameters.dimension];
+	private double[][] measurementCartesianCoordinatePure = new double[MeasurementParameters.dimension][1];
+	private double[][] measurementCartesianCoordinateWithTime = new double[MeasurementParameters.dimension][1];
+	private double[][] measurementGlobalCoordinateWithTime = new double[MeasurementParameters.dimension][1];
 	public static double[][] allKinematics; 
 	
 	
@@ -21,7 +21,7 @@ public class CreateMeasurementWithTime {
 		this.lastStep = lastStep;
 
 		this.allKinematics = MeasurementParameters.measurementStartingParameters;
-		this.measurementCartesianCoordinateWithTime = new double[MeasurementParameters.dimension + 1 ]; // +1 for time
+		this.measurementCartesianCoordinateWithTime = new double[MeasurementParameters.dimension + 1 ][1]; // +1 for time
 	}
 	
 	private void deltaTimeCalculate (double lastTime) {
@@ -34,15 +34,17 @@ public class CreateMeasurementWithTime {
 		deltaTimeCalculate (lastTime);				
 		this.allKinematics = multiplyMatrices(this.allKinematics, sensor.utils.MeasurementParameters.matrixF(this.deltaTime) );
 		//show();
-		for (int i = 0; i < MeasurementParameters.dimension; i++) {	this.measurementCartesianCoordinatePure[i] = this.allKinematics[0][i];}	
+		for (int i = 0; i < MeasurementParameters.dimension; i++) {	
+			this.measurementCartesianCoordinatePure[i][0] = this.allKinematics[0][i];
+			}	
 	}
 		
 	private void measurementCalculationGlobalCoordinate (double lastTime) {
 		measurementCalculation(lastTime);
 		
-		double x = this.measurementCartesianCoordinatePure[0];
-		double y = this.measurementCartesianCoordinatePure[1];
-		double z = this.measurementCartesianCoordinatePure[2];
+		double x = this.measurementCartesianCoordinatePure[0][0];
+		double y = this.measurementCartesianCoordinatePure[1][0];
+		double z = this.measurementCartesianCoordinatePure[2][0];
 		
 		double r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)) + gausianNoiseCreateForR();
 		double theta = Math.atan2(y, x) + gausianNoiseCreateForTheta(); // radyan
@@ -53,30 +55,26 @@ public class CreateMeasurementWithTime {
 //        System.out.println("phi   : " + phi   +  " / "  + phiDegree);
 		
         
-		this.measurementGlobalCoordinateWithTime = new double[] { r, theta, phi , this.lastTime};
+		this.measurementGlobalCoordinateWithTime = new double[][] { {r}, {theta}, {phi} , {this.lastTime}};
 		
 	}
 	
 	private void measurementCalculationCartesianCoordinate (double lastTime) {
 		measurementCalculation(lastTime);
+		
+//		System.out.println("LOGG - CRTM - BAS this.measurementCartesianCoordinateWithTime : " + Arrays.deepToString(this.measurementCartesianCoordinateWithTime));
+		
 		for (int i = 0; i < MeasurementParameters.dimension; i++) {
 			double noise = gausianNoiseCreate(); // !!!!! create Noise
-			this.measurementCartesianCoordinateWithTime[i] = this.measurementCartesianCoordinatePure[i] + noise;
+			this.measurementCartesianCoordinateWithTime[i][0] = this.measurementCartesianCoordinatePure[i][0] + noise;
 		}	
 		
-		this.measurementCartesianCoordinateWithTime[this.measurementCartesianCoordinateWithTime.length - 1] = this.lastTime;
-	}
+		this.measurementCartesianCoordinateWithTime[this.measurementCartesianCoordinateWithTime.length - 1][0] = this.lastTime;
 		
-	private void show() {
-        System.out.print("Sonuc Matrisi :  ");
-        for (int i = 0; i < this.allKinematics.length; i++) {
-            for (int j = 0; j < this.allKinematics[i].length; j++) {
-                System.out.print(this.allKinematics[i][j] + " ");
-            }
-            System.out.println();
-        }
+//		System.out.println("LOGG - CRTM - SON this.measurementCartesianCoordinateWithTime : " + Arrays.deepToString(this.measurementCartesianCoordinateWithTime));
+
 	}
-		
+				
     private static double[][] multiplyMatrices(double[][] matrix1, double[][] matrix2) {
         int rows1 = matrix1.length;
         int cols1 = matrix1[0].length;
@@ -120,14 +118,14 @@ public class CreateMeasurementWithTime {
        
     
         
-	public double[] measurementCartesian (double lastTime) {
+	public double[][] measurementCartesian (double lastTime) {
 		measurementCalculationCartesianCoordinate(lastTime);
 //		System.out.println("LOG - / measurementCartesian");
 //		System.out.println(Arrays.toString(this.measurementCartesianCoordinateWithTime));
 		return this.measurementCartesianCoordinateWithTime;
 	}
 	
-	public double[] measurementGlobal (double lastTime) {
+	public double[][] measurementGlobal (double lastTime) {
 		measurementCalculationGlobalCoordinate(lastTime);
 //		System.out.println("LOG - / measurementGlobal");
 //		System.out.println(Arrays.toString(this.measurementGlobalCoordinateWithTime));
