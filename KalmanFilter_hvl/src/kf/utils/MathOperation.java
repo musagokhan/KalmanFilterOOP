@@ -88,4 +88,66 @@ public class MathOperation {
 
         return result;
     }
+    
+    
+    public static double[][] transposeCalculate (double[][] matrix) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        double[][] transposedMatrix = new double[cols][rows];
+        
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                transposedMatrix[j][i] = matrix[i][j];
+            }
+        }
+        
+        return transposedMatrix;
+    }
+    
+    
+    public static double[][] invert(double[][] matrix) {
+    	
+    	System.out.println("*-*-*-*-*-* Gelen : " + Arrays.deepToString(matrix) );
+    	
+        int n = matrix.length;
+        double[][] augmented = new double[n][2 * n];
+
+        // Augment the matrix with the identity matrix
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(matrix[i], 0, augmented[i], 0, n);
+            augmented[i][i + n] = 1;
+        }
+
+        // Gauss-Jordan elimination
+        for (int i = 0; i < n; i++) {
+            double pivot = augmented[i][i];
+            if (pivot == 0) {
+            	matrix[0][0] = matrix[0][0] + 0.1; // det=0 -> safety operation add +0.1
+            	//throw new IllegalArgumentException("Matrix is singular.");
+            	System.out.println("*-*-*-*-*-* +safe : " + Arrays.deepToString(matrix) );
+            }
+            	
+            for (int j = 0; j < 2 * n; j++) augmented[i][j] /= pivot;
+
+            for (int k = 0; k < n; k++) {
+                if (k != i) {
+                    double factor = augmented[k][i];
+                    for (int j = 0; j < 2 * n; j++) augmented[k][j] -= factor * augmented[i][j];
+                }
+            }
+        }
+        
+
+        // Extract the inverse matrix
+        double[][] inverse = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(augmented[i], n, inverse[i], 0, n);
+        }
+
+        return inverse;
+    }
+    
+    public static void maxtixLengthInfo (double[][] matrix) {System.out.println(" Matrix Lengths : " + matrix.length + "x" + matrix[0].length);}
+    
+    
 }

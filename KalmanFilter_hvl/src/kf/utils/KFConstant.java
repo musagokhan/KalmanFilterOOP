@@ -13,6 +13,7 @@ public class KFConstant {
 	private static double[][] matrixA;
 	private static double[][] matrixA_tr;  // = A matrix transpose
 	private static double[][] matrixH;
+	private static double[][] matrixH_tr;
 	
 	
 	
@@ -28,6 +29,7 @@ public class KFConstant {
 	private static final double sigmaAy = 0;
 	private static final double sigmaAz = 0;
 	
+	private static double[][] matrixR;
 	
 	private static double[][] matrixQ;
 	
@@ -186,39 +188,45 @@ public class KFConstant {
 	 }
 	
 	
-	public static double[][] getHmatrix(int dimension){
+	public static double[][] getHmatrix( boolean type,  int dimension){
 		if (dimension == 1) {
-			return new double[][] {{1,0,0}};
+			matrixH    = new double[][] {{1,0,0}};
+			matrixH_tr = new double[][] { {1}, {0}, {0} };			
 		} else if (dimension == 2) {
-			return new double[][] {
-				{1,0,0,0,0,0},
-				{0,0,0,0,0,0},
-				{0,0,0,0,0,0},
-				{0,0,0,1,0,0},
-				{0,0,0,0,0,0},
-				{0,0,0,0,0,0},
-				};
+			matrixH    = new double[][] {	{1,0,0,0,0,0},	{0,1,0,0,0,0},	};
+			matrixH_tr = new double[][] {	{1,0},	{0,1}, {0,0}, {0,0},  {0,0}, {0,0} };
 		}else if (dimension == 3) {
-			return new double[][] {
-				{1,0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0,0},
-				{0,0,0,1,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,1,0,0},
-				{0,0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0,0},
-				};
+			matrixH    = new double[][] {	{1,0,0,0,0,0,0,0,0}, {0,1,0,0,0,0,0,0,0}, {0,0,1,0,0,0,0,0,0} };
+			matrixH_tr = new double[][] {	{1,0,0}, {0,1,0}, {0,0,1}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} };
 		} else  {
         	System.out.println("!!! [KFConstant.getHmatrix] . STOP SoftWare : java.lang.NullPointerException !!!");
         	System.out.println("dimension max value = 3. Check your StateVector and association");
-        	return null;
+        	matrixH    = null;
+        	matrixH_tr = null;
         }
 		
-		
+        if (type) {
+        	return matrixH;
+        } else {
+            return matrixH_tr;
+        }	
 	}
 	 
+	
+	public static double[][] getRmatrix(int dimension){
+		if (dimension == 1) {
+			return new double[][] {{sigmaXx}};
+		} else if (dimension == 2) {
+			return new double[][] {	{sigmaXx,0}, {0,sigmaXy} };
+		}else if (dimension == 3) {
+			return new double[][] {	{sigmaXx,0,0}, {0,sigmaXy,0}, {0,0,sigmaXz}	};
+		} else  {
+        	System.out.println("!!! [KFConstant.getRmatrix] . STOP SoftWare : java.lang.NullPointerException !!!");
+        	System.out.println("dimension max value = 3. Check your StateVector and association");
+        	return null;
+        }
+	}
+		
 	 
 	 private KFConstant() {}
 	

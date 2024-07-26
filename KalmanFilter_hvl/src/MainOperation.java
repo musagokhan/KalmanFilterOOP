@@ -12,6 +12,11 @@ public class MainOperation {
 
 	public static void main(String[] args) {
 		
+//		double[][] musa = new double[][] { {7,8,7}, {5,9,7}, {9,2,4} };
+//		System.out.println("orj : " + Arrays.deepToString(musa));
+//		System.out.println("orj : " + Arrays.deepToString(kf.utils.MathOperation.invert(musa)));
+		
+		
 		System.out.println("--- Kalman Filter Start ---");
 	
 		CreateTimeBrand createTimeBrand = new CreateTimeBrand();
