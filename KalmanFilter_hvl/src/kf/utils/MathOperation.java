@@ -19,6 +19,21 @@ public class MathOperation {
 	}
 	
 
+    private static double[][] addMatrices(double[][] m1, double[][] m2) {
+        int rows = m1.length;
+        int cols = m1[0].length;
+        double[][] result = new double[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = m1[i][j] + m2[i][j];
+            }
+        }
+
+        return result;
+    }
+    
+    public static double[][] getAddMatrices(double[][] m1, double[][] m2) {	return addMatrices(m1, m2); }
 	
     private static double[][] multiplyMatrices(double[][] matrix1, double[][] matrix2) {  
 

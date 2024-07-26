@@ -21,6 +21,10 @@ public class MainOperation {
 		
 //		double[] track0 = null;
 		
+//		double[][] m1 = new double[][] {{1,2}};
+//		double[][] m2 = new double[][] {{11,2}, {17,20}};
+//		System.out.println( Arrays.deepToString( MathOperation.getAddMatrices(m1, m2)) );
+		
 		for (int workStep=0; workStep < KFConstant.lastWorkStep ; workStep++) {
 			
 			double currentTime = createTimeBrand.getTimeCalculation(); // random time
@@ -33,41 +37,20 @@ public class MainOperation {
 				if (firstStepFlag) {// ilk adim nesne olustur.
 					firstStepFlag = false;
 					track0 = new KF(kFInitationStatus, 1); // icerige eriistigim icin burada koydum. delta=1
-//					track0 = new double[] { 1.0, 2.0, 3.0 };
 				}
-//				System.out.println("Main.track0    : " +  track0);
+				
+//				System.out.println("Main: SV Bfr KF Pre    : " +  Arrays.deepToString(track0.getStateVector()));
+//				System.out.println("Main: CM Bfr KF Pre    : " +  Arrays.deepToString(track0.getCovarianceMatrix()));
 				track0.getKFPredicted(1);
-//				System.out.println("Main.track0    : " +  track0);
+//				System.out.println("Main: SV Aft KF Pre    : " +  Arrays.deepToString(track0.getStateVector()));
+//				System.out.println("Main: CM Aft KF Pre    : " +  Arrays.deepToString(track0.getCovarianceMatrix()));
+				
 
 			} else {				
 				System.out.println("   " + workStep + ".Step waiting to Kalman. Sniff Meas and calculating initStateVector");
 			}
 			
-		}
-		
-
-		
-	
-//		double[] track0StateVector = KFConstant.track0StateVector;
-		
-		
-		
-//		System.out.println("init track0 : " + track0);
-//
-//		double[] track1StateVector = {posX+1, posY-1, posZ+10, speedX, speedY, speedZ, accelerationX, accelerationY, accelerationZ};
-//		KF track1 = new KF(track1StateVector);
-//		System.out.println("init track1 : " + track1);
-//
-//		for (double i=0 ; i<10 ; i++){
-//			track0.getKFPredicted(i);
-//			System.out.println("Step " + i + " - pred track0 : " + track0);
-//			track1.getKFPredicted(i);
-//		}
-//		
-		
-		
-		
-		
+		}	
 		
 		System.out.println("--- Kalman Filter Stop ---");
 	}
