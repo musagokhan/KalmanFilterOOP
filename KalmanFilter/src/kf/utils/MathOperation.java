@@ -106,9 +106,7 @@ public class MathOperation {
     
     
     public static double[][] invert(double[][] matrix) {
-    	
-    	System.out.println("*-*-*-*-*-* Gelen : " + Arrays.deepToString(matrix) );
-    	
+    	    	
         int n = matrix.length;
         double[][] augmented = new double[n][2 * n];
 
@@ -123,8 +121,6 @@ public class MathOperation {
             double pivot = augmented[i][i];
             if (pivot == 0) {
             	matrix[0][0] = matrix[0][0] + 0.1; // det=0 -> safety operation add +0.1
-            	//throw new IllegalArgumentException("Matrix is singular.");
-            	System.out.println("*-*-*-*-*-* +safe : " + Arrays.deepToString(matrix) );
             }
             	
             for (int j = 0; j < 2 * n; j++) augmented[i][j] /= pivot;
@@ -137,7 +133,6 @@ public class MathOperation {
             }
         }
         
-
         // Extract the inverse matrix
         double[][] inverse = new double[n][n];
         for (int i = 0; i < n; i++) {

@@ -14,7 +14,8 @@ public class KFConstant {
 	private static double[][] matrixA_tr;  // = A matrix transpose
 	private static double[][] matrixH;
 	private static double[][] matrixH_tr;
-	
+	private static double[][] matrixR;
+	private static double[][] matrixQ;
 	
 	
 	private static final double sigmaXx = 0;
@@ -29,9 +30,7 @@ public class KFConstant {
 	private static final double sigmaAy = 0;
 	private static final double sigmaAz = 0;
 	
-	private static double[][] matrixR;
-	
-	private static double[][] matrixQ;
+
 	
     public static double[][] getMatrixA(String AorA_tr,int dimension, double deltaT) {
     	double t_v = deltaT;
