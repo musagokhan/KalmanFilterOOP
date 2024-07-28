@@ -22,21 +22,25 @@ public class MainOperation {
 		
 		for (int workStep=0; workStep < KFConstant.lastWorkStep ; workStep++) {
 			// --- Create Measurement Start ---//
+			
 			double currentTime = createTimeBrand.getTimeCalculation(); // random time
+			
+			// TEST
+//			double currentTime = workStep; // random time
+			
+			
 			List<Object> measurementCartesian = createMeasurementWithTime.measurementCartesian(currentTime);	// with time	"Cartesian Coordinate Measurement"
 			//List<Object> measurementGlobal = createMeasurementWithTime.measurementGlobal(currentTime);			// with time	"Global Coordinate Measurement"
-//			double measurementTime = (double) measurementCartesian.get(0); //(double[][]) measurementGlobal.get(0);
-//			double[][] measurement = (double[][]) measurementCartesian.get(1);    //(double[][]) measurementGlobal.get(1);
-			
-			// TEST :
-			double measurementTime = workStep + 1;
-			double[][] measurement = new double[][] {{5}}; //{{5},{4},{1}};
-			
+			double measurementTime = (double) measurementCartesian.get(0); //(double[][]) measurementGlobal.get(0);
+			double[][] measurement = (double[][]) measurementCartesian.get(1);    //(double[][]) measurementGlobal.get(1);			
 			// --- Create Measurement Stop ---//
 			
 			
 			// !!!!!!!!!! TODO !!!!!!!!!!!!! : 3 tip secim var. a)Random - b)OlcumDinleme c)Batch  sadeceb yaptım digerlerinide yapmaliyim. 1Interface 3sub-class tasarla
 			List<double[][]> kFInitationStatus = kFInitation.getMainKFInitation(measurement , measurementTime);
+			
+//			System.out.println("init SM    : " + Arrays.deepToString(kFInitationStatus.get(0)));
+//			System.out.println("init CV    : " + Arrays.deepToString(kFInitationStatus.get(1)));
 			
 			// Kalman Start //
 			deltaT = measurementTime - deltaT;
@@ -45,12 +49,17 @@ public class MainOperation {
 				if (firstStepFlag) {// ilk adim nesne olustur.
 					firstStepFlag = false;
 					track0 = new KF(kFInitationStatus, deltaT); 
-				}
-				track0.getKFPredicted(1);
+				}				
+				System.out.println("bfr KF_Pre SM    : " + Arrays.deepToString(track0.getStateVector()));
+//				System.out.println("bfr KF_Pre CV    : " + Arrays.deepToString(track0.getCovarianceMatrix()));
+				track0.getKFPredicted(deltaT);
+//				System.out.println("bfr KF_Middle SM : " + Arrays.deepToString(track0.getStateVector()));
+//				System.out.println("bfr KF_Middle CV : " + Arrays.deepToString(track0.getCovarianceMatrix()));
 				track0.getKFUpdate(measurement);
-				
-				System.out.println("meas : " + Arrays.deepToString(measurement));
-				System.out.println("SV   : " + Arrays.deepToString(track0.getStateVector()));
+				System.out.println("Last KF_Up  SM   : " + Arrays.deepToString(track0.getStateVector()));
+//				System.out.println("Last KF_Up  CV   : " + Arrays.deepToString(track0.getCovarianceMatrix()));
+//				System.out.println("meas : " + Arrays.deepToString(measurement));
+//				System.out.println("SV   : " + Arrays.deepToString(track0.getStateVector()));
 				
 			} else {				
 				System.out.println("   " + workStep + ".Step waiting to Kalman. Sniff Meas and calculating initStateVector");

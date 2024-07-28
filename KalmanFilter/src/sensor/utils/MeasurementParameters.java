@@ -4,15 +4,15 @@ public class MeasurementParameters {
 	
 	public final static int dimension = 3;
 	
-	public final static double xPositionForStartingMeasurement = 0;
-	public final static double yPositionForStartingMeasurement = 0;
-	public final static double zPositionForStartingMeasurement = 0;
-	public final static double xSpeedForStartingMeasurement = 1;
-	public final static double ySpeedForStartingMeasurement = 1; 
-	public final static double zSpeedForStartingMeasurement = 1;
-	public final static double xAccelerationForStartingMeasurement = 0;
-	public final static double yAccelerationForStartingMeasurement = 0;
-	public final static double zAccelerationForStartingMeasurement = 0;
+	public final static double xPositionForStartingMeasurement = 0.0;
+	public final static double yPositionForStartingMeasurement = 0.0;
+	public final static double zPositionForStartingMeasurement = 0.0;
+	public final static double xSpeedForStartingMeasurement = 1.0;
+	public final static double ySpeedForStartingMeasurement = 1.0; 
+	public final static double zSpeedForStartingMeasurement = 1.0;
+	public final static double xAccelerationForStartingMeasurement = 0.0000011;
+	public final static double yAccelerationForStartingMeasurement = 0.0000012;
+	public final static double zAccelerationForStartingMeasurement = 0.000001;
 	public final static double deltaT = 1;
 	
 	public final static double mu = 0;

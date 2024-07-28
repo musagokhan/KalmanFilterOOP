@@ -7,17 +7,12 @@ public class MathOperation {
 	
 	private MathOperation() {}
 	
-	private static double[][] multiplexWithAmatrixForKFPrediction (String Atype, double[][] inputStateVector, int dimension, double deltaT) {	
-//		System.out.println("1. matrix : " +  Arrays.deepToString(inputStateVector ));
-//		System.out.println("2. matrix : " +  Arrays.deepToString(KFConstant.getMatrixA(dimension, deltaT)) );
-		return multiplyMatrices(KFConstant.getMatrixA(Atype, dimension, deltaT) , inputStateVector );  // sirasi onemli.
-	}
-	
-	
-	public static double[][] getMultiplexWithAmatrixForKFPrediction (String Atype, double[][] inputStateVector, int dimension, double deltaT ) {
-		return multiplexWithAmatrixForKFPrediction(Atype, inputStateVector, dimension, deltaT);
-	}
-	
+//	public static double[][] multiplexWithAmatrixForKFPrediction (String Atype, double[][] inputStateVector, int dimension, double deltaT) {	
+////		System.out.println("MathOperation.(10)  1. matrix : " +  Arrays.deepToString(inputStateVector ));
+////		System.out.println("MathOperation.(11)  2. matrix : " +  Arrays.deepToString(KFConstant.getMatrixA(Atype, dimension, deltaT)) );
+//		return multiplyMatrices(KFConstant.getMatrixA(Atype, dimension, deltaT) , inputStateVector );  // sirasi onemli.
+//	}
+		
 
 	// !!! TODO : !!! : fonksiyonel prgramlama yap biFnc
 	private static double helperForAddAndSub(boolean doAdd,  double m1, double m2) {
@@ -61,10 +56,13 @@ public class MathOperation {
     public static double[][] getmultiplyMatrices(double[][] m1, double[][] m2) {return multiplyMatrices(m1, m2); }
 	
     private static double[][] multiplyMatrices(double[][] matrix1, double[][] matrix2) {  
-    	
+//    	System.out.println("  ");
+//    	System.out.println("  ");
 //    	System.out.println(" !!! multiplyMatrices !!! ");
-//    	System.out.println("matrix1 :  " + Arrays.deepToString(matrix1));
-//    	System.out.println("matrix2 :  " + Arrays.deepToString(matrix2));   
+//    	System.out.println("matrix1 : "  + Arrays.deepToString(matrix1));
+//    	maxtixLengthInfo(matrix1);
+//    	System.out.println("matrix2 :  " + Arrays.deepToString(matrix2));
+//    	maxtixLengthInfo(matrix2);
     	
         int rows1 = matrix1.length;
         int cols1 = matrix1[0].length;

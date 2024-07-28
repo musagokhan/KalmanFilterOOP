@@ -11,7 +11,6 @@ public class KFInitation {
 	private double[][] initCovarianceDatas;
 	private int operationalDimension;
 	private int storage =0;
-	private final int referanceMeasurementNumber = 3;
 	
 	private double[] timeArray       = new double[KFConstant.sniffMeasNumForInitStateVector];
 	private double[] xPositionArray  = new double[KFConstant.sniffMeasNumForInitStateVector];
@@ -27,7 +26,6 @@ public class KFInitation {
 		this.storage = this.storage + 1;
 		
 		if (this.storage < (KFConstant.sniffMeasNumForInitStateVector + 1) ) { //preparing phase +1 next for FOR_LOOP
-			
 			if (currentMeasurement.length == 3) {	
 				this.xPositionArray[this.storage -1] =  currentMeasurement[0][0];
 				this.yPositionArray[this.storage -1] = currentMeasurement[1][0];
@@ -53,27 +51,18 @@ public class KFInitation {
 				xPositionDatas = kinematicsCalculate(this.xPositionArray[0], this.xPositionArray[1], this.xPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
 				yPositionDatas = kinematicsCalculate(this.yPositionArray[0], this.yPositionArray[1], this.yPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
 				zPositionDatas = kinematicsCalculate(this.zPositionArray[0], this.zPositionArray[1], this.zPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
+				this.initKinematicDatas = new double[][]{ {xPositionDatas[0]}, {yPositionDatas[0]}, {zPositionDatas[0]},	{xPositionDatas[1]}, {yPositionDatas[1]}, {zPositionDatas[1]},	{xPositionDatas[2]}, {yPositionDatas[2]}, {zPositionDatas[2]}};
 			}else if (currentMeasurement.length == 2) {
 				xPositionDatas = kinematicsCalculate(this.xPositionArray[0], this.xPositionArray[1], this.xPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
 				yPositionDatas = kinematicsCalculate(this.yPositionArray[0], this.yPositionArray[1], this.yPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
+				this.initKinematicDatas = new double[][]{ {xPositionDatas[0]}, {yPositionDatas[0]},	{xPositionDatas[1]}, {yPositionDatas[1]},	{xPositionDatas[2]}, {yPositionDatas[2]}};
 			}else if (currentMeasurement.length == 1) {
 				xPositionDatas = kinematicsCalculate(this.xPositionArray[0], this.xPositionArray[1], this.xPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
+				this.initKinematicDatas = new double[][]{ {xPositionDatas[0]},	{xPositionDatas[1]},	{xPositionDatas[2]}};
 			}else {
 				System.err.println("ERR. Check your Measurement Length. TRUE input : 0< Measurement_Length <4");
 			}
 
-			this.initKinematicDatas = new double[][]{
-	            {xPositionDatas != null ? xPositionDatas[0] : 0},
-	            {yPositionDatas != null ? yPositionDatas[0] : 0},
-	            {zPositionDatas != null ? zPositionDatas[0] : 0},
-	            {xPositionDatas != null ? xPositionDatas[1] : 0},
-	            {yPositionDatas != null ? yPositionDatas[1] : 0},
-	            {zPositionDatas != null ? zPositionDatas[1] : 0},
-	            {xPositionDatas != null ? xPositionDatas[2] : 0},
-	            {yPositionDatas != null ? yPositionDatas[2] : 0},
-	            {zPositionDatas != null ? zPositionDatas[2] : 0}
-			};
-			
 		}
 		
 	}
@@ -90,7 +79,7 @@ public class KFInitation {
 		double v1 = (xB - xA)/(tB - tA);
 		double v2 = (xC - xB)/(tC - tB);
 		double v = (v2+v1)/2;
-		double a = accelerationCalculate(v2, v1, tA, tC);
+		double a =  accelerationCalculate(v2, v1, tA, tC);  //!!! a : closed. if it is open. a is bigger stepbystep
 		double position =  xA + v1 * (tC -tA) + 0.5 * a * Math.pow( (tC -tA), 2) ;
 		double[] result = {position, v , a};
 		return result;
@@ -102,7 +91,7 @@ public class KFInitation {
 	
 	public List<double[][]> getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		
-		this.operationalDimension = (int) Math.pow( (currentMeasurement.length), 2); 
+		this.operationalDimension = currentMeasurement.length * 3; 
 				
 		mainKFInitationForStateVector(currentMeasurement, currentMeasurementTime);
 		mainKFInitationForCovarianceMatrix();

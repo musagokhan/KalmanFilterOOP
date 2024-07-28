@@ -1,6 +1,5 @@
 package sensor;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -17,6 +16,11 @@ public class CreateMeasurementWithTime {
 	
 
 	private int lastStep;	
+	
+	//
+	//  MeasurementParameters.dimension   =  OLCUM BOYUTU !!!!!!!  TEST =  1   3 yap 
+	//
+	
 	private double[][] measurementCartesianCoordinatePure = new double[MeasurementParameters.dimension][1];
 	private double[][] measurementCartesianCoordinateWithTime = new double[MeasurementParameters.dimension][1];
 	private double[][] measurementGlobalCoordinateWithTime = new double[MeasurementParameters.dimension][1];
@@ -38,7 +42,7 @@ public class CreateMeasurementWithTime {
 			
 	private void measurementCalculation(double lastTime) {
 		deltaTimeCalculate (lastTime);				
-		this.allKinematics = multiplyMatrices(this.allKinematics, sensor.utils.MeasurementParameters.matrixF(this.deltaTime) );
+		this.allKinematics = multiplyMatrices(this.allKinematics, MeasurementParameters.matrixF(this.deltaTime) );
 		//show();
 		for (int i = 0; i < MeasurementParameters.dimension; i++) {	
 			this.measurementCartesianCoordinatePure[i][0] = this.allKinematics[0][i];
@@ -74,12 +78,8 @@ public class CreateMeasurementWithTime {
 			double noise = gausianNoiseCreate(); // !!!!! create Noise
 			this.measurementCartesianCoordinateWithTime[i][0] = this.measurementCartesianCoordinatePure[i][0] + noise;
 		}	
-		
-		// zaman eklemesi
-//		this.measurementCartesianCoordinateWithTime[this.measurementCartesianCoordinateWithTime.length - 1][0] = this.lastTime;
-		
+			
 //		System.out.println("LOGG - CRTM - SON this.measurementCartesianCoordinateWithTime : " + Arrays.deepToString(this.measurementCartesianCoordinateWithTime));
-
 	}
 				
     private static double[][] multiplyMatrices(double[][] matrix1, double[][] matrix2) {
@@ -125,7 +125,6 @@ public class CreateMeasurementWithTime {
        
     
         
-//	public double[][] measurementCartesian (double lastTime) {
 	public List<Object> measurementCartesian (double lastTime) {
 		measurementCalculationCartesianCoordinate(lastTime);
 		List<Object> measurementList = new ArrayList<>();

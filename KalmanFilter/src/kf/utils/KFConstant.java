@@ -7,7 +7,7 @@ import java.util.List;
 public class KFConstant {
 	
 	public final static int diffParametersNumberInStateVector = 3;
-	public static final int lastWorkStep = 8;
+	public static final int lastWorkStep = 100;
 	public static final int sniffMeasNumForInitStateVector = 3;
 	
 	private static double[][] matrixA;
@@ -18,100 +18,94 @@ public class KFConstant {
 	private static double[][] matrixQ;
 	
 	
-	private static final double sigmaXx = 0;
-	private static final double sigmaXy = 0;
-	private static final double sigmaXz = 0;
+	private static final double sigmaXx = 0.01;
+	private static final double sigmaXy = 0.01;
+	private static final double sigmaXz = 0.01;
 	
-	private static final double sigmaVx = 0;
-	private static final double sigmaVy = 0;
-	private static final double sigmaVz = 0;
+	private static final double sigmaVx = 0.01;
+	private static final double sigmaVy = 0.01;
+	private static final double sigmaVz = 0.01;
 	
-	private static final double sigmaAx = 0;
-	private static final double sigmaAy = 0;
-	private static final double sigmaAz = 0;
+	private static final double sigmaAx = 0.00001;
+	private static final double sigmaAy = 0.00001;
+	private static final double sigmaAz = 0.00001;
 	
 
 	
-    public static double[][] getMatrixA(String AorA_tr,int dimension, double deltaT) {
+    public static double[][] getMatrixA(boolean AorA_tr,int dimension, double deltaT) {
     	double t_v = deltaT;
     	double t_a = 0.5 * Math.sqrt(Math.pow(deltaT, 2));
     	
         if (dimension == 1) {
 //        	System.out.println("KFConstant / dimension == 1");        
             matrixA = new double[][] {
-                {1.0, 0.0, 0.0},
-                {t_v, 1.0, 0.0},
-                {t_a, t_v, 1.0},
+                {1.0, t_v, t_a},
+                {0.0, 1.0, t_v},
+                {0.0, 0.0, 1.0},
             };
             
             matrixA_tr = new double[][] {
-	              {1.0, t_v, t_a},
-	              {0.0, 1.0, t_v},
-	              {0.0, 0.0, 1.0},
+                {1.0, 0.0, 0.0},
+                {t_v, 1.0, 0.0},
+                {t_a, t_v, 1.0},
 	          }; 
             
             
         }else if (dimension == 2) {
 //        	System.out.println("KFConstant / dimension == 2");    
         	matrixA = new double[][] {
+                {1.0, 0.0, t_v, 0.0, t_a, 0.0},
+                {0.0, 1.0, 0.0, t_v, 0.0, t_a},
+                {0.0, 0.0, 1.0, 0.0, t_v, 0.0},
+                {0.0, 0.0, 0.0, 1.0, 0.0, t_v},
+                {0.0, 0.0, 0.0, 0.0, 1.0, 0.0},
+                {0.0, 0.0, 0.0, 0.0, 0.0, 1.0},
+            };
+            
+            matrixA_tr = new double[][] {
                 {1.0, 0.0, 0.0, 0.0, 0.0, 0.0},
                 {0.0, 1.0, 0.0, 0.0, 0.0, 0.0},
                 {t_v, 0.0, 1.0, 0.0, 0.0, 0.0},
                 {0.0, t_v, 0.0, 1.0, 0.0, 0.0},
                 {t_a, 0.0, t_v, 0.0, 1.0, 0.0},
                 {0.0, t_a, 0.0, t_v, 0.0, 1.0},
-            };
-            
-            matrixA_tr = new double[][] {
-		          {1.0, 0.0, t_v, 0.0, t_a, 0.0},
-		          {0.0, 1.0, 0.0, t_v, 0.0, t_a},
-		          {0.0, 0.0, 1.0, 0.0, t_v, 0.0},
-		          {0.0, 0.0, 0.0, 1.0, 0.0, t_v},
-		          {0.0, 0.0, 0.0, 0.0, 1.0, 0.0},
-		          {0.0, 0.0, 0.0, 0.0, 0.0, 1.0},
 		      };
             
         }else if (dimension == 3) {       	
-//        	System.out.println("KFConstant / dimension == 3");          
+//        	System.out.println("KFConstant / dimension == 3");
         	matrixA = new double[][] {
-                {1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
-                {0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
-                {0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
-                {t_v, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0},
-                {0.0, t_v, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0},
-                {0.0, 0.0, t_v, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0},
-                {t_a, 0.0, 0.0, t_v, 0.0, 0.0, 1.0, 0.0, 0.0},
-                {0.0, t_a, 0.0, 0.0, t_v, 0.0, 0.0, 1.0, 0.0},
-                {0.0, 0.0, t_a, 0.0, 0.0, t_v, 0.0, 0.0, 1.0},
+                {1.0, 0.0, 0.0, t_v, 0.0, 0.0, t_a, 0.0, 0.0},
+                {0.0, 1.0, 0.0, 0.0, t_v, 0.0, 0.0, t_a, 0.0},
+                {0.0, 0.0, 1.0, 0.0, 0.0, t_v, 0.0, 0.0, t_a},
+                {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, t_v, 0.0, 0.0},
+                {0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, t_v, 0.0},
+                {0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, t_v},
+                {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0},
+                {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0},
+                {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0}
             };
-            
+          
         	matrixA_tr = new double[][] {
-		          {1.0, 0.0, 0.0, t_v, 0.0, 0.0, t_a, 0.0, 0.0},
-		          {0.0, 1.0, 0.0, 0.0, t_v, 0.0, 0.0, t_a, 0.0},
-		          {0.0, 0.0, 1.0, 0.0, 0.0, t_v, 0.0, 0.0, t_a},
-		          {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, t_v, 0.0, 0.0},
-		          {0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, t_v, 0.0},
-		          {0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, t_v},
-		          {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0},
-		          {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0},
-		          {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0},
-		      };  
-            
+        	    {1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+        	    {0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+        	    {0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+        	    {t_v, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+        	    {0.0, t_v, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0},
+        	    {0.0, 0.0, t_v, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0},
+        	    {t_a, 0.0, 0.0, t_v, 0.0, 0.0, 1.0, 0.0, 0.0},
+        	    {0.0, t_a, 0.0, 0.0, t_v, 0.0, 0.0, 1.0, 0.0},
+        	    {0.0, 0.0, t_a, 0.0, 0.0, t_v, 0.0, 0.0, 1.0}
+		      }; 
+		                  
         }else  {
         	System.out.println("!!! [KFConstant.getMatrixA] . STOP SoftWare : java.lang.NullPointerException !!!");
         	System.out.println("dimension max value = 3. Check your StateVector and association");
         }
-        
-//        System.out.println("KFConstant / matrixA     [2.matrix] : " +  Arrays.deepToString(matrixA));
-//        System.out.println("KFConstant / matrixA_tr  [2.matrix] : " +  Arrays.deepToString(matrixA_tr));
-        
-        if (AorA_tr == "A") {
+                
+        if (AorA_tr) { // A matrix
         	return matrixA;
-        } else if (AorA_tr == "A_tr") {
-            return matrixA_tr;
         } else {
-        	System.out.println("!!! Software Crash - NullPointerEx. - Check matrix Name (A or A_tr)");
-        	return null;
+            return matrixA_tr;
         }
     }
     
