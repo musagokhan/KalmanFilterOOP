@@ -2,7 +2,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import kf.KF;
-import kf.KFInitation;
+import kf.init.RandomAssing;
+import kf.init.SniffMeasurement;
 import sensor.CreateMeasurementWithTime;
 import sensor.CreateTimeBrand;
 import kf.utils.*;
@@ -14,7 +15,8 @@ public class MainOperation {
 		System.out.println("--- WORK Start ---");	
 		CreateTimeBrand createTimeBrand = new CreateTimeBrand();
 		CreateMeasurementWithTime createMeasurementWithTime = new CreateMeasurementWithTime();
-		KFInitation kFInitation = new KFInitation();
+		SniffMeasurement kFInitationWithSnifMeas = new SniffMeasurement();
+		RandomAssing kFInitationWithRandom = new RandomAssing();
 		KF track0 = null; 
 		boolean firstStepFlag = true;
 		double deltaT = 0.0;
@@ -36,11 +38,18 @@ public class MainOperation {
 			// --- Create Measurement Stop ---//
 			
 			
-			// !!!!!!!!!! TODO !!!!!!!!!!!!! : 3 tip secim var. a)Random - b)OlcumDinleme c)Batch  sadeceb yaptım digerlerinide yapmaliyim. 1Interface 3sub-class tasarla
-			List<double[][]> kFInitationStatus = kFInitation.getMainKFInitation(measurement , measurementTime);
+			/* !!!!!!!!!! TODO !!!!!!!!!!!!! : 3 tip secim var.
+			a)Random 			: OK
+			b)OlcumDinleme 		: OK
+			c)Batch 			: TODO 
+			src.kf.init icerigini doldur.
+			*/
+//			List<double[][]> kFInitationStatus = kFInitationWithSnifMeas.getMainKFInitation(measurement , measurementTime);
+			List<double[][]> kFInitationStatus = kFInitationWithRandom.getMainKFInitation(measurement , measurementTime);
 			
-//			System.out.println("init SM    : " + Arrays.deepToString(kFInitationStatus.get(0)));
-//			System.out.println("init CV    : " + Arrays.deepToString(kFInitationStatus.get(1)));
+			
+			System.out.println("init SM    : " + Arrays.deepToString(kFInitationStatus.get(0)));
+			System.out.println("init CV    : " + Arrays.deepToString(kFInitationStatus.get(1)));
 			
 			// Kalman Start //
 			deltaT = measurementTime - deltaT;
@@ -71,6 +80,8 @@ public class MainOperation {
 		
 		System.out.println("--- WORK Stop ---");
 	}
+	
+	// TODO : MAP gibi bir formda SV ve CM tut.
 	
 
 }
