@@ -1,9 +1,5 @@
 package kf.utils;
 
-import java.util.Arrays;
-import java.util.List;
-
-
 public class KFConstant {
 	
 	public final static int diffParametersNumberInStateVector = 3;  // x, Vx, ax

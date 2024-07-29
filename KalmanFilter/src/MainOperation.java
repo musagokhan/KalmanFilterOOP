@@ -2,6 +2,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import kf.KF;
+import kf.init.BatchEst;
 import kf.init.RandomAssing;
 import kf.init.SniffMeasurement;
 import sensor.CreateMeasurementWithTime;
@@ -16,40 +17,28 @@ public class MainOperation {
 		CreateTimeBrand createTimeBrand = new CreateTimeBrand();
 		CreateMeasurementWithTime createMeasurementWithTime = new CreateMeasurementWithTime();
 		SniffMeasurement kFInitationWithSnifMeas = new SniffMeasurement();
-		RandomAssing kFInitationWithRandom = new RandomAssing();
+//		RandomAssing kFInitationWithRandom = new RandomAssing();
+//		BatchEst kFInitationWithBatchEst = new BatchEst();
 		KF track0 = null; 
 		boolean firstStepFlag = true;
 		double deltaT = 0.0;
-		
+				
 		
 		for (int workStep=0; workStep < KFConstant.lastWorkStep ; workStep++) {
-			// --- Create Measurement Start ---//
-			
+			// --- Create Measurement Start ---//		
 			double currentTime = createTimeBrand.getTimeCalculation(); // random time
-			
-			// TEST
-//			double currentTime = workStep; // random time
-			
-			
 			List<Object> measurementCartesian = createMeasurementWithTime.measurementCartesian(currentTime);	// with time	"Cartesian Coordinate Measurement"
 			//List<Object> measurementGlobal = createMeasurementWithTime.measurementGlobal(currentTime);			// with time	"Global Coordinate Measurement"
 			double measurementTime = (double) measurementCartesian.get(0); //(double[][]) measurementGlobal.get(0);
 			double[][] measurement = (double[][]) measurementCartesian.get(1);    //(double[][]) measurementGlobal.get(1);			
 			// --- Create Measurement Stop ---//
 			
+			// --- KF init Assing  START (3 options) ---//	
+			List<double[][]> kFInitationStatus = kFInitationWithSnifMeas.getMainKFInitation(measurement , measurementTime);
+//			List<double[][]> kFInitationStatus = kFInitationWithRandom.getMainKFInitation(measurement , measurementTime);
+//			List<double[][]> kFInitationStatus = kFInitationWithBatchEst.getMainKFInitation(measurement, measurementTime);
+			// --- KF init Assing Stop ---//	
 			
-			/* !!!!!!!!!! TODO !!!!!!!!!!!!! : 3 tip secim var.
-			a)Random 			: OK
-			b)OlcumDinleme 		: OK
-			c)Batch 			: TODO 
-			src.kf.init icerigini doldur.
-			*/
-//			List<double[][]> kFInitationStatus = kFInitationWithSnifMeas.getMainKFInitation(measurement , measurementTime);
-			List<double[][]> kFInitationStatus = kFInitationWithRandom.getMainKFInitation(measurement , measurementTime);
-			
-			
-			System.out.println("init SM    : " + Arrays.deepToString(kFInitationStatus.get(0)));
-			System.out.println("init CV    : " + Arrays.deepToString(kFInitationStatus.get(1)));
 			
 			// Kalman Start //
 			deltaT = measurementTime - deltaT;
@@ -58,7 +47,8 @@ public class MainOperation {
 				if (firstStepFlag) {// ilk adim nesne olustur.
 					firstStepFlag = false;
 					track0 = new KF(kFInitationStatus, deltaT); 
-				}				
+				}	
+				System.out.println("Measurement      : " + Arrays.deepToString(measurement));
 				System.out.println("bfr KF_Pre SM    : " + Arrays.deepToString(track0.getStateVector()));
 //				System.out.println("bfr KF_Pre CV    : " + Arrays.deepToString(track0.getCovarianceMatrix()));
 				track0.getKFPredicted(deltaT);
