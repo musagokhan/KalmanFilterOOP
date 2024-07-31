@@ -180,23 +180,32 @@ public class EKFConstant {
 	public static double[][] getHmatrix( double[][] measurement,  boolean type,  int dimension){
 		
 		double r     = measurement[0][0];
-		double tetha = measurement[1][0];
+		double theta = measurement[1][0];
 		double phi   = measurement[2][0];
 		
 		
 		if (dimension == 1) {
-			matrixH    = new double[][] {{Math.sin(phi)*Math.cos(tetha),0,0}};
-			matrixH_tr = new double[][] {{Math.sin(phi)*Math.cos(tetha)}, {0}, {0} };			
+			matrixH    = new double[][] { 	{Math.sin(phi)*Math.cos(theta)   ,0,0},	{-r*Math.sin(phi)*Math.sin(theta),0,0}, {r*Math.cos(phi)*Math.cos(theta) ,0,0} }; //3x3
+			matrixH_tr = new double[][] {{Math.sin(phi)*Math.cos(theta), -r*Math.sin(phi)*Math.sin(theta), r*Math.cos(phi)*Math.cos(theta)}, {0, 0, 0},	{0, 0 ,0} };  //3x3	
+				
 		} else if (dimension == 2) {
-			BURASİ YAPİLACAK !!!
-			matrixH    = new double[][] {{}}; // 3x6
-			matrixH_tr = new double[][] {{}}; // 3x6
+			
+			matrixH    = new double[][] {	{   Math.sin(phi)*Math.cos(theta), 0, 0,   Math.sin(phi)*Math.sin(theta), 0, 0}, 
+											{-r*Math.sin(phi)*Math.sin(theta), 0, 0, r*Math.sin(phi)*Math.cos(theta), 0, 0}, 
+											{ r*Math.cos(phi)*Math.cos(theta), 0, 0, r*Math.cos(phi)*Math.sin(theta), 0, 0} }; // 3x6
+
+			matrixH_tr = new double[][] {	{Math.sin(phi)*Math.cos(theta), -r*Math.sin(phi)*Math.sin(theta), r*Math.cos(phi)*Math.cos(theta)}, {0,0,0} , {0,0,0},
+											{Math.sin(phi)*Math.sin(theta),  r*Math.sin(phi)*Math.cos(theta), r*Math.cos(phi)*Math.sin(theta)}, {0,0,0} , {0,0,0} 	}; // 6x3
 			
 		}else if (dimension == 3) {
-			BURASİ YAPİLACAK !!!
-			matrixH    = new double[][] {{}}; // 3x9
+			matrixH    = new double[][] {	{   Math.sin(phi)*Math.cos(theta), 0, 0,   Math.sin(phi)*Math.sin(theta), 0, 0,    Math.cos(phi), 0, 0}, 
+											{-r*Math.sin(phi)*Math.sin(theta), 0, 0, r*Math.sin(phi)*Math.cos(theta), 0, 0,  0              , 0, 0}, 
+											{ r*Math.cos(phi)*Math.cos(theta), 0, 0, r*Math.cos(phi)*Math.sin(theta), 0, 0, -r*Math.sin(phi), 0, 0} }; // 3x9
 			
-			matrixH_tr = new double[][] {{}}; // 3x9
+			matrixH_tr = new double[][] {
+			    {Math.sin(phi)*Math.cos(theta),-r*Math.sin(phi)*Math.sin(theta), r*Math.cos(phi)*Math.cos(theta)}, {0, 0, 0},  {0, 0, 0},
+			    {Math.sin(phi)*Math.sin(theta), r*Math.sin(phi)*Math.cos(theta), r*Math.cos(phi)*Math.sin(theta)}, {0, 0, 0},  {0, 0, 0},
+			    {Math.cos(phi)				  , 0							   , -r*Math.sin(phi)}				 , {0, 0, 0},  {0, 0, 0}	};
 			
 			
 		} else  {

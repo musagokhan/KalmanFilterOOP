@@ -1,4 +1,4 @@
-package kf;
+package kf.init;
 
 import java.util.ArrayList;
 import java.util.List;
