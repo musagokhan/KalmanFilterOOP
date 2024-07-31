@@ -1,12 +1,13 @@
 package kf.init;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import kf.model.Iinit;
+import kf.model.IKFinit;
 import kf.utils.KFConstant;
 
-public class SniffMeasurement  implements  Iinit{
+public class KF_SniffMeasurement  implements  IKFinit{
 	
 	private double[][] initKinematicDatas;
 	private double[][] initCovarianceDatas;
@@ -21,11 +22,10 @@ public class SniffMeasurement  implements  Iinit{
 	List<double[][]> XandPmatrices = new ArrayList<>();
 
 	
-	public SniffMeasurement() {}
+	public KF_SniffMeasurement() {}
 	
 	private void mainKFInitationForStateVector(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.storage = this.storage + 1;
-		
 		if (this.storage < (KFConstant.sniffMeasNumForInitStateVector + 1) ) { //preparing phase +1 next for FOR_LOOP
 			if (currentMeasurement.length == 3) {	
 				this.xPositionArray[this.storage -1] =  currentMeasurement[0][0];
@@ -76,6 +76,7 @@ public class SniffMeasurement  implements  Iinit{
 	}
 	
  	private double[] kinematicsCalculate (double xA, double xB, double xC, double tA, double tB, double tC) {
+ 		System.out.println("kinematicsCalculate ");
 		double v1 = (xB - xA)/(tB - tA);
 		double v2 = (xC - xB)/(tC - tB);
 		double v = (v2+v1)/2;
@@ -96,7 +97,7 @@ public class SniffMeasurement  implements  Iinit{
 				
 		mainKFInitationForStateVector(currentMeasurement, currentMeasurementTime);
 		mainKFInitationForCovarianceMatrix();
-		
+				
 		this.XandPmatrices.add(0, this.initKinematicDatas);
 		this.XandPmatrices.add(1, this.initCovarianceDatas);
 		

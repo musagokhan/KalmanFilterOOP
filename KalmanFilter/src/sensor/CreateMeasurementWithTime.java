@@ -1,5 +1,6 @@
 package sensor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -12,9 +13,6 @@ public class CreateMeasurementWithTime {
 	private double deltaTime = 1;
 
 	
-	
-	
-
 	private int lastStep;	
 	
 	//
@@ -23,6 +21,7 @@ public class CreateMeasurementWithTime {
 	
 	private double[][] measurementCartesianCoordinatePure = new double[MeasurementParameters.dimension][1];
 	private double[][] measurementCartesianCoordinateWithTime = new double[MeasurementParameters.dimension][1];
+	private double[][] measurementGlobalCoordinateWithNoise = new double[MeasurementParameters.dimension][1];
 	private double[][] measurementGlobalCoordinateWithTime = new double[MeasurementParameters.dimension][1];
 	public static double[][] allKinematics; 
 	
@@ -64,10 +63,19 @@ public class CreateMeasurementWithTime {
 //        System.out.println("theta : " + theta +  " / "  + thetaDegree);
 //        System.out.println("phi   : " + phi   +  " / "  + phiDegree);
 		
-        
+//		System.out.println("r     : " + r  );
+//		System.out.println("theta : " + theta  );
+//		System.out.println("phi   : " + phi  );
+		this.measurementGlobalCoordinateWithNoise = new double[][] { {r}, {theta}, {phi}};
 		this.measurementGlobalCoordinateWithTime = new double[][] { {r}, {theta}, {phi} , {this.lastTime}};
 		
 	}
+	
+//	private void addNoiseGlobalCoordinate () {
+//		for (int i = 0; i < MeasurementParameters.dimension; i++) {
+//			double noise = gausianNoiseCreate(); // !!!!! create Noise
+//		}
+//	}
 	
 	private void measurementCalculationCartesianCoordinate (double lastTime) {
 		measurementCalculation(lastTime);
@@ -141,12 +149,13 @@ public class CreateMeasurementWithTime {
 //	public double[][] measurementGlobal (double lastTime) {
 	public List<Object> measurementGlobal (double lastTime) {
 		measurementCalculationGlobalCoordinate(lastTime);
-//		System.out.println("LOG - / measurementGlobal");
+//		System.out.print("LOG - / measurementGlobal : ");
 //		System.out.println(Arrays.toString(this.measurementGlobalCoordinateWithTime));
 		List<Object> measurementList = new ArrayList<>();
 		// zaman eklemesi
 		measurementList.add(0, lastTime);
-		measurementList.add(1, this.measurementCartesianCoordinatePure);
+		measurementList.add(1, this.measurementGlobalCoordinateWithNoise);
+
 		
 //		return this.measurementCartesianCoordinateWithTime;
 		return measurementList;

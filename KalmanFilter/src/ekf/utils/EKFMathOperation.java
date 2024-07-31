@@ -2,10 +2,10 @@ package ekf.utils;
 import java.util.Arrays;
 
 import kf.utils.*;
-public class MathOperation {
+public class EKFMathOperation {
 	
 	
-	private MathOperation() {}
+	private EKFMathOperation() {}
 	
 //	public static double[][] multiplexWithAmatrixForKFPrediction (String Atype, double[][] inputStateVector, int dimension, double deltaT) {	
 ////		System.out.println("MathOperation.(10)  1. matrix : " +  Arrays.deepToString(inputStateVector ));

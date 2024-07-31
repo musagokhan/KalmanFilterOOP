@@ -1,8 +1,8 @@
-package kf.model;
+package ekf.model;
 
 import java.util.List;
 
-public interface Iinit {
+public interface IEKFinit {
 	
 	public List<double[][]> getMainKFInitation (double[][] currentMeasurement, double currentMeasurementTime); 
 
@@ -22,4 +22,5 @@ public interface Iinit {
 	public static final double ZmaxAcceleration = 0.0010;
 	public static final double ZminAcceleration = 0.0001;
 	
+
 }

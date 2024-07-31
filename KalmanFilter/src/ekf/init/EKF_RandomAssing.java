@@ -1,15 +1,14 @@
-package kf.init;
+package ekf.init;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import kf.model.Iinit;
-import kf.utils.KFConstant;
+import ekf.model.IEKFinit;
+import ekf.utils.EKFConstant;
 
-public class RandomAssing implements  Iinit{
-	
+public class EKF_RandomAssing implements  IEKFinit{
+
 	private int dimension;
 	private double XcoorEstimate;
 	private double YcoorEstimate;
@@ -41,6 +40,7 @@ public class RandomAssing implements  Iinit{
 		this.YcoorEstimate = (this.YcoorMeasurement * (1 + gapPercet) - this.YcoorMeasurement * (1- gapPercet)) * random.nextDouble();
 	}
 	
+
 	private void ZCoordinateEstimateCalculation(){
 		Random random = new Random();
 		this.ZcoorEstimate = (this.ZcoorMeasurement * (1 + gapPercet) - this.ZcoorMeasurement * (1- gapPercet)) * random.nextDouble();
@@ -76,9 +76,9 @@ public class RandomAssing implements  Iinit{
 		this.ZaccelerationEstimate = (ZmaxAcceleration - ZminAcceleration) * random.nextDouble();
 	}
 	
-	public RandomAssing() {}
+	public EKF_RandomAssing() {}
 	
-	
+
 	private void stateVectorEstimate () {
 		
 		if (this.dimension == 3) {
@@ -106,7 +106,7 @@ public class RandomAssing implements  Iinit{
 	}
 	
 	private void covarianceMatrixEstimate (){
-		int CMlength = this.dimension * KFConstant.diffParametersNumberInStateVector;
+		int CMlength = this.dimension * EKFConstant.diffParametersNumberInStateVector;
 		this.initCovarianceDatas = new double[CMlength][CMlength];
 		for (int i = 0; i < CMlength; i++) {
 			this.initCovarianceDatas[i][i] = 1;
@@ -128,5 +128,8 @@ public class RandomAssing implements  Iinit{
 		
 		return this.XandPmatrices;
 	}
+	
+	
+	
 	
 }

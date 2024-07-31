@@ -1,15 +1,15 @@
-package kf.init;
+package ekf.init;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import kf.model.Iinit;
-import kf.utils.KFConstant;
-import kf.utils.MathOperation;
+import ekf.model.IEKFinit;
+import ekf.utils.EKFConstant;
+import ekf.utils.EKFMathOperation;
 
-public class BatchEst implements  Iinit{
-	
+public class EKF_BatchEst implements  IEKFinit {
+
 	private int dimension;
 	private double[][] H_matrix;
 	private double[][] H_tr_matrix;
@@ -22,25 +22,24 @@ public class BatchEst implements  Iinit{
 	
 	
 	private void stateVectorEstimate() {
-		double[][] temp = MathOperation.getmultiplyMatrices(this.initCovarianceDatas, this.H_tr_matrix);
-		temp = MathOperation.getmultiplyMatrices(temp, this.R_inv_matrix);
-		this.initstateVectoreDatas = MathOperation.getmultiplyMatrices(temp, this.measurement);
+		double[][] temp = EKFMathOperation.getmultiplyMatrices(this.initCovarianceDatas, this.H_tr_matrix);
+		temp = EKFMathOperation.getmultiplyMatrices(temp, this.R_inv_matrix);
+		this.initstateVectoreDatas = EKFMathOperation.getmultiplyMatrices(temp, this.measurement);
 //		System.out.println("this.initstateVectoreDatas : " + Arrays.deepToString(this.initstateVectoreDatas));
 	}
 	
 	private void covarianceMatrixEstimate() {
 		
-		double[][] temp = MathOperation.getmultiplyMatrices(this.H_tr_matrix, this.R_inv_matrix);
-		temp = MathOperation.getmultiplyMatrices(temp,this.H_matrix);
+		double[][] temp = EKFMathOperation.getmultiplyMatrices(this.H_tr_matrix, this.R_inv_matrix);
+		temp = EKFMathOperation.getmultiplyMatrices(temp,this.H_matrix);
 //		this.initCovarianceDatas = MathOperation.invert(temp); if dont add small noise inverse operation is not possible.
 		temp = CMaddNoiseForSecurty(temp);
-		this.initCovarianceDatas = MathOperation.invert(temp);
+		this.initCovarianceDatas = EKFMathOperation.invert(temp);
 //		System.out.println("this.initCovarianceDatas + Noise: " + Arrays.deepToString(this.initCovarianceDatas));
 	}
 	
-	
 	private double[][]  CMaddNoiseForSecurty (double[][] matrix) {
-		double length = this.dimension * KFConstant.diffParametersNumberInStateVector;
+		double length = this.dimension * EKFConstant.diffParametersNumberInStateVector;
 		for (int i = 0; i < length; i++) {
             for (int j = 0; j < length; j++) {
             	Random random = new Random();
@@ -50,15 +49,14 @@ public class BatchEst implements  Iinit{
 		return matrix;
 	}
 	
-	
 	@Override
 	public List<double[][]> getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.dimension = currentMeasurement.length;	
 		
-		this.H_matrix = KFConstant.getHmatrix(true, this.dimension);
-		this.H_tr_matrix = KFConstant.getHmatrix(false, this.dimension);
-		this.R_matrix = KFConstant.getRmatrix(this.dimension);
-		this.R_inv_matrix = MathOperation.invert(this.R_matrix);
+		this.H_matrix = EKFConstant.getHmatrix(currentMeasurement, true, this.dimension);
+		this.H_tr_matrix = EKFConstant.getHmatrix(currentMeasurement, false, this.dimension);
+		this.R_matrix = EKFConstant.getRmatrix(this.dimension);
+		this.R_inv_matrix = EKFMathOperation.invert(this.R_matrix);
 		this.measurement = currentMeasurement;
 		
 //		System.out.println("///// LOG /////");
