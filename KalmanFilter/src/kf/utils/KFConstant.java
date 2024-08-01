@@ -3,7 +3,7 @@ package kf.utils;
 public class KFConstant {
 	
 	public final static int diffParametersNumberInStateVector = 3;  // x, Vx, ax
-	public static final int lastWorkStep = 100;
+	public static final int lastWorkStep = 10;
 	public static final int sniffMeasNumForInitStateVector = 3;
 	
 	private static double[][] matrixA;

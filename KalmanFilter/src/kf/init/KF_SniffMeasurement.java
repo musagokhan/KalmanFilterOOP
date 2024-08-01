@@ -19,7 +19,7 @@ public class KF_SniffMeasurement  implements  IKFinit{
 	private double[] yPositionArray  = new double[KFConstant.sniffMeasNumForInitStateVector];
 	private double[] zPositionArray  = new double[KFConstant.sniffMeasNumForInitStateVector];
 	
-	List<double[][]> XandPmatrices = new ArrayList<>();
+	//List<double[][]> XandPmatrices = new ArrayList<>();
 
 	
 	public KF_SniffMeasurement() {}
@@ -76,7 +76,6 @@ public class KF_SniffMeasurement  implements  IKFinit{
 	}
 	
  	private double[] kinematicsCalculate (double xA, double xB, double xC, double tA, double tB, double tC) {
- 		System.out.println("kinematicsCalculate ");
 		double v1 = (xB - xA)/(tB - tA);
 		double v2 = (xC - xB)/(tC - tB);
 		double v = (v2+v1)/2;
@@ -91,17 +90,15 @@ public class KF_SniffMeasurement  implements  IKFinit{
 	}
 	
 	@Override
-	public List<double[][]> getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
-		
+	public void getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.operationalDimension = currentMeasurement.length * 3; 
 				
 		mainKFInitationForStateVector(currentMeasurement, currentMeasurementTime);
-		mainKFInitationForCovarianceMatrix();
-				
-		this.XandPmatrices.add(0, this.initKinematicDatas);
-		this.XandPmatrices.add(1, this.initCovarianceDatas);
-		
-		return this.XandPmatrices;
+		mainKFInitationForCovarianceMatrix();	
 	}
+	
+	public double[][] getStateVector() {return this.initKinematicDatas;};
+	
+	public double[][] getCovarianceMatrix() {return  this.initCovarianceDatas;};
 	
 }

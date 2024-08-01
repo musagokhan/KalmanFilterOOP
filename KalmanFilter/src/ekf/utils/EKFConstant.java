@@ -198,15 +198,26 @@ public class EKFConstant {
 											{Math.sin(phi)*Math.sin(theta),  r*Math.sin(phi)*Math.cos(theta), r*Math.cos(phi)*Math.sin(theta)}, {0,0,0} , {0,0,0} 	}; // 6x3
 			
 		}else if (dimension == 3) {
-			matrixH    = new double[][] {	{   Math.sin(phi)*Math.cos(theta), 0, 0,   Math.sin(phi)*Math.sin(theta), 0, 0,    Math.cos(phi), 0, 0}, 
-											{-r*Math.sin(phi)*Math.sin(theta), 0, 0, r*Math.sin(phi)*Math.cos(theta), 0, 0,  0              , 0, 0}, 
-											{ r*Math.cos(phi)*Math.cos(theta), 0, 0, r*Math.cos(phi)*Math.sin(theta), 0, 0, -r*Math.sin(phi), 0, 0} }; // 3x9
+//			matrixH    = new double[][] {	{   Math.sin(phi)*Math.cos(theta), 0, 0,   Math.sin(phi)*Math.sin(theta), 0, 0,    Math.cos(phi), 0, 0}, 
+//											{-r*Math.sin(phi)*Math.sin(theta), 0, 0, r*Math.sin(phi)*Math.cos(theta), 0, 0,  0              , 0, 0}, 
+//											{ r*Math.cos(phi)*Math.cos(theta), 0, 0, r*Math.cos(phi)*Math.sin(theta), 0, 0, -r*Math.sin(phi), 0, 0} }; // 3x9
+//			
+//			matrixH_tr = new double[][] {
+//			    {Math.sin(phi)*Math.cos(theta),-r*Math.sin(phi)*Math.sin(theta), r*Math.cos(phi)*Math.cos(theta)}, {0, 0, 0},  {0, 0, 0},
+//			    {Math.sin(phi)*Math.sin(theta), r*Math.sin(phi)*Math.cos(theta), r*Math.cos(phi)*Math.sin(theta)}, {0, 0, 0},  {0, 0, 0},
+//			    {Math.cos(phi)				  , 0							   , -r*Math.sin(phi)}				 , {0, 0, 0},  {0, 0, 0}	};
 			
+		//mami
+			    
+			matrixH    = new double[][] {	
+					{   Math.sin(phi)*Math.cos(theta), 0, 0,   Math.sin(phi)*Math.sin(theta), 0, 0,    Math.sin(phi), 0, 0}, 
+					{-r*Math.sin(phi)*Math.sin(theta), 0, 0, r*Math.sin(phi)*Math.cos(theta), 0, 0,  0              , 0, 0}, 
+					{ r*Math.cos(phi)*Math.cos(theta), 0, 0, r*Math.cos(phi)*Math.sin(theta), 0, 0,  r*Math.cos(phi), 0, 0} }; // 3x9
+
 			matrixH_tr = new double[][] {
-			    {Math.sin(phi)*Math.cos(theta),-r*Math.sin(phi)*Math.sin(theta), r*Math.cos(phi)*Math.cos(theta)}, {0, 0, 0},  {0, 0, 0},
-			    {Math.sin(phi)*Math.sin(theta), r*Math.sin(phi)*Math.cos(theta), r*Math.cos(phi)*Math.sin(theta)}, {0, 0, 0},  {0, 0, 0},
-			    {Math.cos(phi)				  , 0							   , -r*Math.sin(phi)}				 , {0, 0, 0},  {0, 0, 0}	};
-			
+					{Math.sin(phi)*Math.cos(theta),-r*Math.sin(phi)*Math.sin(theta), r*Math.cos(phi)*Math.cos(theta)}, {0, 0, 0},  {0, 0, 0},
+					{Math.sin(phi)*Math.sin(theta), r*Math.sin(phi)*Math.cos(theta), r*Math.cos(phi)*Math.sin(theta)}, {0, 0, 0},  {0, 0, 0},
+					{Math.sin(phi)				  , 0							   , -r*Math.cos(phi)}				 , {0, 0, 0},  {0, 0, 0}	};
 			
 		} else  {
         	System.out.println("!!! [KFConstant.getHmatrix] . STOP SoftWare : java.lang.NullPointerException !!!");

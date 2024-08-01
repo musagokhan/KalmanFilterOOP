@@ -35,7 +35,22 @@ public class EKF {
 		//constructerlLogs();        
 	}
 	
+	public EKF(List<double[][]> XandPmatrices) {
+		this.stateVector = XandPmatrices.get(0);
+		this.covarianceMatrix = XandPmatrices.get(1);
+		this.operationalDimension = this.stateVector.length / EKFConstant.diffParametersNumberInStateVector;
+		//constructerlLogs();        
+	}
+	
+	public EKF(double[][] stateVector, double[][] covarianceMatrix) {
+		this.stateVector = stateVector;
+		this.covarianceMatrix = covarianceMatrix;
+		this.operationalDimension = this.stateVector.length / EKFConstant.diffParametersNumberInStateVector;
+		//constructerlLogs();        
+	}
+	
 	public double[][] getStateVector(){return this.stateVector;}
+	
 	public double[][] getCovarianceMatrix(){return this.covarianceMatrix;}
 	
 	private void EKFPredictedForStateVector(double deltaTime) {		
@@ -53,12 +68,6 @@ public class EKF {
 //		System.out.println("After KF_Pre  covarianceMatrix    : " +  Arrays.deepToString(this.covarianceMatrix));	
 	}
 		
-	public void getKFPredicted(double deltaTime) {
-		this.Amatrix = EKFConstant.getMatrixA(true, this.operationalDimension, deltaTime);
-		this.A_trmatrix = EKFConstant.getMatrixA(false, this.operationalDimension, deltaTime);	
-		EKFPredictedForStateVector(deltaTime);      // for StateVector Predicted
-		EKFPredictedForCovarianceMatrix(deltaTime); // for CovarianceMatrix Predicted
-	}
 	
 	private double[][] inovationCalculate(double[][] measurement ) {
 		double[][]  predictedMeasurement =  EKFMathOperation.getmultiplyMatrices(this.Hmatrix, this.stateVector); // H*x	
@@ -97,7 +106,7 @@ public class EKF {
 //		MathOperation.maxtixLengthInfo(this.Kmatrix);
 	}
 	
-	private void KFupdateStateVectorCalculator() {	
+	private void EKFupdateStateVectorCalculator() {	
 		
 //		System.out.println("");
 //		System.out.println(" - KFupdateStateVectorCalculator - ");
@@ -114,7 +123,7 @@ public class EKF {
 //		MathOperation.maxtixLengthInfo(this.stateVector);
 	}
 	
-	private void KFupdateCovarianceMatrixCalculator() {
+	private void EKFupdateCovarianceMatrixCalculator() {
 		double[][] temp = EKFMathOperation.getmultiplyMatrices(this.Kmatrix, this.Smatrix);
 		temp = EKFMathOperation.getmultiplyMatrices(temp, EKFMathOperation.transposeCalculate(this.Kmatrix));
 		this.covarianceMatrix = EKFMathOperation.getSubtractionMatrices(this.covarianceMatrix, temp);		
@@ -122,23 +131,33 @@ public class EKF {
 //		MathOperation.maxtixLengthInfo(this.covarianceMatrix);
 	}
 	
-	private void KFUpdate(double[][] measurement){
+	private void EKFUpdate(double[][] measurement){
 		inovationCalculate(measurement); 
 		SmatrixCalculate();
 		KmatrixCalculate();
-		KFupdateStateVectorCalculator();
-		KFupdateCovarianceMatrixCalculator();	
+		EKFupdateStateVectorCalculator();
+		EKFupdateCovarianceMatrixCalculator();	
 	}
 	
-	public void getKFUpdate(double[][] measurement){		
+	public void getEKFPredicted(double deltaTime) {
+		this.Amatrix = EKFConstant.getMatrixA(true, this.operationalDimension, deltaTime);
+		this.A_trmatrix = EKFConstant.getMatrixA(false, this.operationalDimension, deltaTime);	
+		EKFPredictedForStateVector(deltaTime);      // for StateVector Predicted
+		EKFPredictedForCovarianceMatrix(deltaTime); // for CovarianceMatrix Predicted
+	}
+	
+	public void getEKFUpdate(double[][] measurement){		
 		this.Hmatrix = EKFConstant.getHmatrix(measurement , true, this.operationalDimension);
 		this.Hmatrix_tr = EKFConstant.getHmatrix(measurement , false, this.operationalDimension);
-		KFUpdate(measurement);
+		EKFUpdate(measurement);
 	}
 	
+	public void EKFDoit(double deltaTime, double[][] measurement){
+		getEKFPredicted(deltaTime);
+		getEKFUpdate(measurement);
+	}
 	
-	
- 	public String toString() {
+  	public String toString() {
 		return  " X :" + Arrays.deepToString(this.stateVector)+
 				" /-/" +
 				" P : " + Arrays.deepToString(this.covarianceMatrix); 

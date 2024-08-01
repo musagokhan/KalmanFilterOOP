@@ -23,7 +23,7 @@ public class EKF_SniffMeasurement implements  IEKFinit{
 	
 	public EKF_SniffMeasurement() {}
 
-	private void mainKFInitationForStateVector(double[][] currentMeasurement, double currentMeasurementTime) {
+	private void mainEKFInitationForStateVector(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.storage = this.storage + 1;
 		
 		if (this.storage < (EKFConstant.sniffMeasNumForInitStateVector + 1) ) { //preparing phase +1 next for FOR_LOOP
@@ -68,7 +68,7 @@ public class EKF_SniffMeasurement implements  IEKFinit{
 		
 	}
 	
-	private void mainKFInitationForCovarianceMatrix (){
+	private void mainEKFInitationForCovarianceMatrix (){
 		this.initCovarianceDatas = new double[this.operationalDimension][this.operationalDimension ];
 		for (int i = 0; i < this.operationalDimension; i++) {
 			this.initCovarianceDatas[i][i] = 1;
@@ -90,17 +90,15 @@ public class EKF_SniffMeasurement implements  IEKFinit{
 	}
 	
 	@Override
-	public List<double[][]> getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
-		
+	public void getMainEKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.operationalDimension = currentMeasurement.length * 3; 
 				
-		mainKFInitationForStateVector(currentMeasurement, currentMeasurementTime);
-		mainKFInitationForCovarianceMatrix();
-		
-		this.XandPmatrices.add(0, this.initKinematicDatas);
-		this.XandPmatrices.add(1, this.initCovarianceDatas);
-		
-		return this.XandPmatrices;
+		mainEKFInitationForStateVector(currentMeasurement, currentMeasurementTime);
+		mainEKFInitationForCovarianceMatrix();
 	}
+	
+	public double[][] getStateVector() {return this.initKinematicDatas;};
+	
+	public double[][] getCovarianceMatrix() {return  this.initCovarianceDatas;};
 	
 }

@@ -41,7 +41,7 @@ public class MeasurementParameters {
 	    return matrixF;
 	}
 
-	
+	// KRITIK : x,y,z ,  Vx,Vy,Vz , ax,ay,az
 	public static double[][] measurementStartingParameters = {{
 		xPositionForStartingMeasurement, yPositionForStartingMeasurement, zPositionForStartingMeasurement, 
 		xSpeedForStartingMeasurement, ySpeedForStartingMeasurement, zSpeedForStartingMeasurement, 

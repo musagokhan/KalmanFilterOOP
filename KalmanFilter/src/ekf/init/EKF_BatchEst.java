@@ -50,29 +50,20 @@ public class EKF_BatchEst implements  IEKFinit {
 	}
 	
 	@Override
-	public List<double[][]> getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
-		this.dimension = currentMeasurement.length;	
-		
+	public void getMainEKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
+		this.dimension = currentMeasurement.length;			
 		this.H_matrix = EKFConstant.getHmatrix(currentMeasurement, true, this.dimension);
 		this.H_tr_matrix = EKFConstant.getHmatrix(currentMeasurement, false, this.dimension);
 		this.R_matrix = EKFConstant.getRmatrix(this.dimension);
 		this.R_inv_matrix = EKFMathOperation.invert(this.R_matrix);
 		this.measurement = currentMeasurement;
 		
-//		System.out.println("///// LOG /////");
-//		System.out.println("H_matrix 	: " + Arrays.deepToString(H_matrix));
-//		System.out.println("H_tr_matrix : " + Arrays.deepToString(H_tr_matrix));
-//		System.out.println("R_matrix 	: " + Arrays.deepToString(R_matrix));
-//		System.out.println("R_invmatrix : " + Arrays.deepToString(R_inv_matrix));
-//		System.out.println("measurement : " + Arrays.deepToString(measurement));
-		
 		covarianceMatrixEstimate();
-		stateVectorEstimate();
-		
-		this.XandPmatrices.add(0, this.initstateVectoreDatas);
-		this.XandPmatrices.add(1, this.initCovarianceDatas);
-		
-		return this.XandPmatrices;
+		stateVectorEstimate();	
 	}
-
+	
+	public double[][] getStateVector() {return this.initstateVectoreDatas;};
+	
+	public double[][] getCovarianceMatrix() {return  this.initCovarianceDatas;};
+	
 }

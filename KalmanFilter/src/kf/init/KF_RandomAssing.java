@@ -28,7 +28,7 @@ public class KF_RandomAssing implements  IKFinit{
 	private double[][] initstateVectoreDatas; 
 	private double[][] initCovarianceDatas;
 	
-	List<double[][]> XandPmatrices = new ArrayList<>();
+	//List<double[][]> XandPmatrices = new ArrayList<>();
 	
 	private void XCoordinateEstimateCalculation(){
 		Random random = new Random();
@@ -112,20 +112,19 @@ public class KF_RandomAssing implements  IKFinit{
 		}
 	}
 	
-	@Override
-	public List<double[][]> getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		
+	@Override
+	public void getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.dimension = currentMeasurement.length;		
 		this.XcoorMeasurement = currentMeasurement[0][0];
 		this.YcoorMeasurement = currentMeasurement[1][0];
 		this.ZcoorMeasurement = currentMeasurement[2][0];
-		stateVectorEstimate();
+		stateVectorEstimate(); 
 		covarianceMatrixEstimate();
-		
-		this.XandPmatrices.add(0, this.initstateVectoreDatas);
-		this.XandPmatrices.add(1, this.initCovarianceDatas);
-		
-		return this.XandPmatrices;
 	}
+	
+	public double[][] getStateVector() {return this.initstateVectoreDatas;};
+	
+	public double[][] getCovarianceMatrix() {return  this.initCovarianceDatas;};
 	
 }

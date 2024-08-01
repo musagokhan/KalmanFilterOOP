@@ -114,22 +114,17 @@ public class EKF_RandomAssing implements  IEKFinit{
 	}
 	
 	@Override
-	public List<double[][]> getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
-		
+	public void getMainEKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {	
 		this.dimension = currentMeasurement.length;		
 		this.XcoorMeasurement = currentMeasurement[0][0];
 		this.YcoorMeasurement = currentMeasurement[1][0];
 		this.ZcoorMeasurement = currentMeasurement[2][0];
 		stateVectorEstimate();
-		covarianceMatrixEstimate();
-		
-		this.XandPmatrices.add(0, this.initstateVectoreDatas);
-		this.XandPmatrices.add(1, this.initCovarianceDatas);
-		
-		return this.XandPmatrices;
+		covarianceMatrixEstimate();		
 	}
 	
+	public double[][] getStateVector() {return this.initstateVectoreDatas;};
 	
-	
-	
+	public double[][] getCovarianceMatrix() {return  this.initCovarianceDatas;};
+		
 }
