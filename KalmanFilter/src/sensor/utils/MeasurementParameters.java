@@ -18,6 +18,16 @@ public class MeasurementParameters {
 	public final static double mu = 0;
 	public final static double sigma = 0.01;
 	
+	public final static double mu_X = 0;
+	public final static double sigma_X = 1;
+	
+	public final static double mu_Y = 0;
+	public final static double sigma_Y = 1;
+	
+	public final static double mu_Z = 0;
+	public final static double sigma_Z = 1;
+	
+	
 	public final static double mu_R = 0;
 	public final static double sigma_R = 0.1;
 	
@@ -26,6 +36,19 @@ public class MeasurementParameters {
 	
 	public final static double mu_phi = 0;
 	public final static double sigma_phi = 0.01;
+	
+	public static double[][] RMatrixCartesian;
+	
+	public static double[][]  RMatrixCartesian() {
+		if (dimension ==1) {
+			return RMatrixCartesian = new double[][] { { Math.pow(sigma_X, 2)} };
+		}else if (dimension ==2) {
+			return RMatrixCartesian = new double[][] { {Math.pow(sigma_X, 2), 0}, {0, Math.pow(sigma_Y, 2)} };
+		}else if (dimension ==3) {
+			return RMatrixCartesian = new double[][] { {Math.pow(sigma_X, 2), 0, 0}, {0, Math.pow(sigma_Y, 2), 0}, {0, 0, Math.pow(sigma_Z, 2)} };
+		} else {return null;}
+	}
+	
 	
 	public static double[][] matrixF(double dt) {
 		double[][] matrixF = new double[9][9];

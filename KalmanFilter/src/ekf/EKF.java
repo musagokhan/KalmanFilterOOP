@@ -1,52 +1,28 @@
 package ekf;
 
-import java.util.Arrays;
-import java.util.List;
-
 import ekf.utils.EKFConstant;
 import ekf.utils.EKFMathOperation;
+import kf.utils.KFConstant;
 
 public class EKF {
 	
-	private double deltaT;	
 	private double[][] stateVector;
 	private double[][] covarianceMatrix;
-	
 	private double[][] Amatrix;
-	private double[][] A_trmatrix;
-	
-	private double[][] inovationMatrix;
-	
+	private double[][] A_trmatrix;	
+	private double[][] inovationMatrix;	
 	private double[][] Hmatrix;
 	private double[][] Hmatrix_tr;
-	
+	private double[][] measurementCovariance;
 	private double[][] Smatrix;
 	private double[][] Kmatrix;
 	
 	private final int operationalDimension;
-	private String AorA_tr;
-		
-		
-	public EKF(List<double[][]> XandPmatrices, double deltaT) {
-		this.deltaT = deltaT;
-		this.stateVector = XandPmatrices.get(0);
-		this.covarianceMatrix = XandPmatrices.get(1);
-		this.operationalDimension = this.stateVector.length / EKFConstant.diffParametersNumberInStateVector;
-		//constructerlLogs();        
-	}
-	
-	public EKF(List<double[][]> XandPmatrices) {
-		this.stateVector = XandPmatrices.get(0);
-		this.covarianceMatrix = XandPmatrices.get(1);
-		this.operationalDimension = this.stateVector.length / EKFConstant.diffParametersNumberInStateVector;
-		//constructerlLogs();        
-	}
-	
+			
 	public EKF(double[][] stateVector, double[][] covarianceMatrix) {
 		this.stateVector = stateVector;
 		this.covarianceMatrix = covarianceMatrix;
-		this.operationalDimension = this.stateVector.length / EKFConstant.diffParametersNumberInStateVector;
-		//constructerlLogs();        
+		this.operationalDimension = this.stateVector.length / EKFConstant.diffParametersNumberInStateVector;        
 	}
 	
 	public double[][] getStateVector(){return this.stateVector;}
@@ -78,6 +54,14 @@ public class EKF {
 		return null;
 	}
 
+	private void Rmatrix(double[][] measurementCovariance) {
+		if (measurementCovariance != null) {
+			this.measurementCovariance = measurementCovariance;
+		} else {
+			this.measurementCovariance = KFConstant.getRmatrix(this.operationalDimension);
+		}
+		
+	}
 	private void SmatrixCalculate () {
 //		System.out.println("");
 //		System.out.println(" - SmatrixCalculate - ");
@@ -131,48 +115,27 @@ public class EKF {
 //		MathOperation.maxtixLengthInfo(this.covarianceMatrix);
 	}
 	
-	private void EKFUpdate(double[][] measurement){
-		inovationCalculate(measurement); 
+	public void EKFUpdate(double[][] measurement,  double[][] measurementCovariance){
+		this.Hmatrix = EKFConstant.getHmatrix(measurement , true, this.operationalDimension);
+		this.Hmatrix_tr = EKFConstant.getHmatrix(measurement , false, this.operationalDimension);
+		inovationCalculate(measurement);
+		Rmatrix(measurementCovariance);
 		SmatrixCalculate();
 		KmatrixCalculate();
 		EKFupdateStateVectorCalculator();
 		EKFupdateCovarianceMatrixCalculator();	
 	}
 	
-	public void getEKFPredicted(double deltaTime) {
+	public void EKFPredicted(double deltaTime) {
 		this.Amatrix = EKFConstant.getMatrixA(true, this.operationalDimension, deltaTime);
 		this.A_trmatrix = EKFConstant.getMatrixA(false, this.operationalDimension, deltaTime);	
 		EKFPredictedForStateVector(deltaTime);      // for StateVector Predicted
 		EKFPredictedForCovarianceMatrix(deltaTime); // for CovarianceMatrix Predicted
 	}
-	
-	public void getEKFUpdate(double[][] measurement){		
-		this.Hmatrix = EKFConstant.getHmatrix(measurement , true, this.operationalDimension);
-		this.Hmatrix_tr = EKFConstant.getHmatrix(measurement , false, this.operationalDimension);
-		EKFUpdate(measurement);
+		
+	public void EKFDoit(double deltaTime, double[][] measurement, double[][] measurementCovariance){
+		EKFPredicted(deltaTime);
+		EKFUpdate(measurement, measurementCovariance);
 	}
 	
-	public void EKFDoit(double deltaTime, double[][] measurement){
-		getEKFPredicted(deltaTime);
-		getEKFUpdate(measurement);
-	}
-	
-  	public String toString() {
-		return  " X :" + Arrays.deepToString(this.stateVector)+
-				" /-/" +
-				" P : " + Arrays.deepToString(this.covarianceMatrix); 
-	}
-	
-	private void constructerlLogs() {
-		System.out.println("constructerlLogs");
-		System.out.println("KFConstant.dimension    : " + (EKFConstant.diffParametersNumberInStateVector));
-		System.out.println("this.stateVector        : " + Arrays.toString(this.stateVector));
-		System.out.println("this.stateVector.length : " + (this.stateVector.length));
-	    System.out.println("KFConstant.dimension    : " + (EKFConstant.diffParametersNumberInStateVector));
-        System.out.println("operationalDimension    : " + (this.operationalDimension));
-        System.out.println("operationalDimension x2 : " + (this.operationalDimension*2));
-        System.out.println("operationalDimension x3 : " + (this.operationalDimension*3));
-	}
-	
-
 }

@@ -1,7 +1,5 @@
 package execute;
 import java.util.Arrays;
-import java.util.List;
-
 import kf.KF;
 import kf.utils.*;
 import kf.init.KF_BatchEst;
@@ -11,25 +9,19 @@ import ekf.EKF;
 import ekf.init.EKF_BatchEst;
 import ekf.init.EKF_RandomAssing;
 import ekf.init.EKF_SniffMeasurement;
-
-import sensor.CreateMeasurementWithTime;
-import sensor.CreateTimeBrand;
-
+import sensor.MeasurementManagement;
 
 public class MainOperation {
 
 	public static void main(String[] args) {
 
 		System.out.println("--- WORK Start ---");	
-		CreateTimeBrand createTimeBrand = new CreateTimeBrand();
-		CreateMeasurementWithTime createMeasurementWithTime = new CreateMeasurementWithTime();
-		String FilterType =  "KalmanFilter"; //   "ExtendedKalmanFilter"; //      
+		MeasurementManagement measurementDatas = new MeasurementManagement();
+		String FilterType =    "KalmanFilter"; // "ExtendedKalmanFilter"; //  
 		
 		KF track0 = null; 
 		EKF track1 = null; 
 		boolean firstStepFlag = true;
-		double deltaT = 0.0;
-		List<Object> measurementWithTime ;
 		
 		double[][] stateVector;
 		double[][] covarianceMatrix;
@@ -47,19 +39,17 @@ public class MainOperation {
 			
 			double measurementTime;
 			double[][] measurement;
+			double[][] measurementCovariance;
 					
-			double currentTime = createTimeBrand.getTimeCalculation(); // random time
 			
 			if (FilterType == "KalmanFilter") {
-				// --- Create Measurement Start ---//
-				measurementWithTime = createMeasurementWithTime.measurementCartesian(currentTime);	// with time	"Cartesian Coordinate Measurement"
-				measurementTime = (double) measurementWithTime.get(0); //(double[][]) measurementGlobal.get(0);
-				measurement = (double[][]) measurementWithTime.get(1);    //(double[][]) measurementGlobal.get(1);	
-				deltaT = measurementTime - deltaT;			
-				// --- Create Measurement Stop ---//
+				
+				measurementDatas.createMeasurementCartesian(workStep);
+				measurement = measurementDatas.getMeasurement();
+				measurementTime = measurementDatas.getMeasurementTime();
+				measurementCovariance = measurementDatas.getMeasurementCovariance();
 			
 				// --- KF init Assing  START (3 options) ---//
-				
 				kFInitationWithSnifMeas.getMainKFInitation(measurement , measurementTime);
 				stateVector = kFInitationWithSnifMeas.getStateVector();
 				covarianceMatrix = kFInitationWithSnifMeas.getCovarianceMatrix();
@@ -85,20 +75,8 @@ public class MainOperation {
 					}	
 					System.out.println("Measurement      : " + Arrays.deepToString(measurement));
 					System.out.println("bfr EKF    SM    : " + Arrays.deepToString(track0.getStateVector()));
-					track0.KFDoit(deltaT, measurement);
+					track0.KFDoit(measurementTime, measurement, covarianceMatrix);
 					System.out.println("aft EKF    SM    : " + Arrays.deepToString(track0.getStateVector()));
-					
-//					System.out.println("Measurement      : " + Arrays.deepToString(measurement));
-//					System.out.println("bfr KF_Pre SM    : " + Arrays.deepToString(track0.getStateVector()));
-////					System.out.println("bfr KF_Pre CV    : " + Arrays.deepToString(track0.getCovarianceMatrix()));
-//					track0.getKFPredicted(deltaT);
-////					System.out.println("bfr KF_Middle SM : " + Arrays.deepToString(track0.getStateVector()));
-////					System.out.println("bfr KF_Middle CV : " + Arrays.deepToString(track0.getCovarianceMatrix()));
-//					track0.getKFUpdate(measurement);
-//					System.out.println("Last KF_Up  SM   : " + Arrays.deepToString(track0.getStateVector()));
-////					System.out.println("Last KF_Up  CV   : " + Arrays.deepToString(track0.getCovarianceMatrix()));
-////					System.out.println("meas : " + Arrays.deepToString(measurement));
-////					System.out.println("SV   : " + Arrays.deepToString(track0.getStateVector()));
 				}else {				
 					System.out.println("   " + workStep + ".Step waiting to Kalman. Sniff Meas and calculating initStateVector");
 				}
@@ -106,15 +84,12 @@ public class MainOperation {
 			
 				
 			} else if (FilterType == "ExtendedKalmanFilter") {
-				// --- Create Measurement Start ---//
-				measurementWithTime = createMeasurementWithTime.measurementGlobal(currentTime);			// with time	"Global Coordinate Measurement"
-				measurementTime = (double) measurementWithTime.get(0); //(double[][]) measurementGlobal.get(0);
-				measurement = (double[][]) measurementWithTime.get(1);    //(double[][]) measurementGlobal.get(1);
-				deltaT = measurementTime - deltaT;
-				// --- Create Measurement Stop ---//
+				measurementDatas.createMeasurementGlobal(workStep);
+				measurement = measurementDatas.getMeasurement();
+				measurementTime = measurementDatas.getMeasurementTime();
+				measurementCovariance = measurementDatas.getMeasurementCovariance();
 				
-				// --- EKF init Assing  START (3 options) ---//	
-				
+				// --- EKF init Assing  START (3 options) ---//					
 				ekFInitationWithSnifMeas.getMainEKFInitation(measurement , measurementTime);
 				stateVector = ekFInitationWithSnifMeas.getStateVector();
 				covarianceMatrix = ekFInitationWithSnifMeas.getCovarianceMatrix();
@@ -127,9 +102,7 @@ public class MainOperation {
 //				stateVector = ekFInitationWithBatchEst.getStateVector();
 //				covarianceMatrix = ekFInitationWithBatchEst.getCovarianceMatrix();
 				// --- EKF init Assing Stop ---//	
-				
-				
-				
+								
 				// E.Kalman Start //
 				if (stateVector != null) {
 					System.out.println("   " + workStep + ".Step E.Kalman phase");
@@ -139,24 +112,14 @@ public class MainOperation {
 					}
 					System.out.println("Measurement      : " + Arrays.deepToString(measurement));
 					System.out.println("bfr EKF    SM    : " + Arrays.deepToString(track1.getStateVector()));
-					track1.EKFDoit(deltaT, measurement);
+					track1.EKFDoit(measurementTime, measurement, covarianceMatrix);
 					System.out.println("aft EKF    SM    : " + Arrays.deepToString(track1.getStateVector()));
 					
-//					System.out.println("Measurement      : " + Arrays.deepToString(measurement));
-//					System.out.println("bfr EKF_Pre SM    : " + Arrays.deepToString(track1.getStateVector()));
-////					System.out.println("bfr EKF_Pre CV    : " + Arrays.deepToString(track1.getCovarianceMatrix()));
-//					track1.getEKFPredicted(deltaT);
-////					System.out.println("bfr EKF_Middle SM : " + Arrays.deepToString(track1.getStateVector()));
-////					System.out.println("bfr EKF_Middle CV : " + Arrays.deepToString(track1.getCovarianceMatrix()));
-//					track1.getEKFUpdate(measurement);
-//					System.out.println("Last EKF_Up  SM   : " + Arrays.deepToString(track1.getStateVector()));
-////					System.out.println("Last EKF_Up  CV   : " + Arrays.deepToString(track1.getCovarianceMatrix()));
-////					System.out.println("meas : " + Arrays.deepToString(measurement));
-////					System.out.println("SV   : " + Arrays.deepToString(track0.getStateVector()));
 				}else {				
 						System.out.println("   " + workStep + ".Step waiting to E.Kalman. Sniff Meas and calculating initStateVector");
 				}
 				// E.Kalman Stop //
+			
 			}
 			
 		}	

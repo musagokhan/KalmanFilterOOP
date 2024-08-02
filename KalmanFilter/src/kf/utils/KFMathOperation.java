@@ -60,9 +60,9 @@ public class KFMathOperation {
 //    	System.out.println("  ");
 //    	System.out.println(" !!! multiplyMatrices !!! ");
 //    	System.out.println("matrix1 : "  + Arrays.deepToString(matrix1));
-//    	maxtixLengthInfo(matrix1);
+//    	//maxtixLengthInfo(matrix1);
 //    	System.out.println("matrix2 :  " + Arrays.deepToString(matrix2));
-//    	maxtixLengthInfo(matrix2);
+//    	//maxtixLengthInfo(matrix2);
     	
         int rows1 = matrix1.length;
         int cols1 = matrix1[0].length;
