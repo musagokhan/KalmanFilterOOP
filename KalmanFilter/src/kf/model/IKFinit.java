@@ -1,10 +1,8 @@
 package kf.model;
 
-import java.util.List;
-
 public interface IKFinit {
 	
-	public List<double[][]>  getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime);
+	public boolean getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime);
 
 	// Constant for initialize
 	public static final double gapPercet = 0.1; 

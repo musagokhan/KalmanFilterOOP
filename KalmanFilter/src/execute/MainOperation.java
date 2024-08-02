@@ -54,19 +54,15 @@ public class MainOperation {
 				measurementTime = measurementDatas.getMeasurementTime();
 				measurementCovariance = measurementDatas.getMeasurementCovariance();
 			
-				// --- KF init Assing  START (3 options) ---//
-				XandPmatrices = kfInitManager.initManager("RandomAssing", measurement, measurementTime);
-				stateVector = XandPmatrices.get(0);
-				covarianceMatrix = XandPmatrices.get(1);
-				
-//				kFInitationWithRandom.getMainKFInitation(measurement , measurementTime);
-//				stateVector = kFInitationWithRandom.getStateVector();
-//				covarianceMatrix = kFInitationWithRandom.getCovarianceMatrix();
-				
-//				kFInitationWithBatchEst.getMainKFInitation(measurement , measurementTime);
-//				stateVector = kFInitationWithBatchEst.getStateVector();
-//				covarianceMatrix = kFInitationWithBatchEst.getCovarianceMatrix();
-
+				// --- KF init Assing  START (3 options : SniffMeasurement - RandomAssing - BatchEst) ---//
+				if ( kfInitManager.initManager("SniffMeasurement", measurement, measurementTime) ) {
+					System.out.println("DUUURRRR");
+					stateVector = kfInitManager.getStateVector();
+					covarianceMatrix = kfInitManager.getCovarianceMatrix();
+				} else {
+					stateVector = null;
+					covarianceMatrix = null;
+				}
 				// --- KF init Assing Stop ---//	
 				
 				

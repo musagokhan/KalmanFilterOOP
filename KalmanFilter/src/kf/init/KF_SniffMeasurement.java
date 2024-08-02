@@ -1,23 +1,24 @@
 package kf.init;
 
 
+import java.util.Arrays;
 import java.util.List;
 import kf.model.IKFinit;
 import kf.utils.KFConstant;
 
 public class KF_SniffMeasurement  implements  IKFinit{
 	
-	private double[][] initKinematicDatas;
+	private double[][] initstateVectoreDatas;
 	private double[][] initCovarianceDatas;
 	private int operationalDimension;
 	private int storage =0;
+	private boolean validity;
 	
 	private double[] timeArray       = new double[KFConstant.sniffMeasNumForInitStateVector];
 	private double[] xPositionArray  = new double[KFConstant.sniffMeasNumForInitStateVector];
 	private double[] yPositionArray  = new double[KFConstant.sniffMeasNumForInitStateVector];
 	private double[] zPositionArray  = new double[KFConstant.sniffMeasNumForInitStateVector];
 	
-	private List<double[][]> XandPmatrices;
 
 	
 	public KF_SniffMeasurement() {}
@@ -28,7 +29,7 @@ public class KF_SniffMeasurement  implements  IKFinit{
 			if (currentMeasurement.length == 3) {	
 				this.xPositionArray[this.storage -1] =  currentMeasurement[0][0];
 				this.yPositionArray[this.storage -1] = currentMeasurement[1][0];
-				this.zPositionArray[this.storage -1] = currentMeasurement[2][0];	
+				this.zPositionArray[this.storage -1] = currentMeasurement[2][0];
 			}else if (currentMeasurement.length == 2) {
 				this.xPositionArray[this.storage -1] =  currentMeasurement[0][0];
 				this.yPositionArray[this.storage -1] = currentMeasurement[1][0];
@@ -36,12 +37,17 @@ public class KF_SniffMeasurement  implements  IKFinit{
 				this.xPositionArray[this.storage -1] =  currentMeasurement[0][0];
 			}else {
 				System.err.println("ERR. Check your Measurement Length. TRUE input : 0< Measurement_Length <4");
-			}				
+			}	
+			
 			this.timeArray[this.storage -1] = currentMeasurementTime;
-			this.initKinematicDatas = null;
+			this.initstateVectoreDatas  = null;
 			this.initCovarianceDatas = null;
 			
+			this.validity = false;
+			
 		} else {
+			
+			this.validity = true;
 			double[] xPositionDatas = null;
 			double[] yPositionDatas = null;
 			double[] zPositionDatas = null;
@@ -50,14 +56,14 @@ public class KF_SniffMeasurement  implements  IKFinit{
 				xPositionDatas = kinematicsCalculate(this.xPositionArray[0], this.xPositionArray[1], this.xPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
 				yPositionDatas = kinematicsCalculate(this.yPositionArray[0], this.yPositionArray[1], this.yPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
 				zPositionDatas = kinematicsCalculate(this.zPositionArray[0], this.zPositionArray[1], this.zPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
-				this.initKinematicDatas = new double[][]{ {xPositionDatas[0]}, {yPositionDatas[0]}, {zPositionDatas[0]},	{xPositionDatas[1]}, {yPositionDatas[1]}, {zPositionDatas[1]},	{xPositionDatas[2]}, {yPositionDatas[2]}, {zPositionDatas[2]}};
+				this.initstateVectoreDatas = new double[][]{ {xPositionDatas[0]}, {yPositionDatas[0]}, {zPositionDatas[0]},	{xPositionDatas[1]}, {yPositionDatas[1]}, {zPositionDatas[1]},	{xPositionDatas[2]}, {yPositionDatas[2]}, {zPositionDatas[2]}};
 			}else if (currentMeasurement.length == 2) {
 				xPositionDatas = kinematicsCalculate(this.xPositionArray[0], this.xPositionArray[1], this.xPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
 				yPositionDatas = kinematicsCalculate(this.yPositionArray[0], this.yPositionArray[1], this.yPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
-				this.initKinematicDatas = new double[][]{ {xPositionDatas[0]}, {yPositionDatas[0]},	{xPositionDatas[1]}, {yPositionDatas[1]},	{xPositionDatas[2]}, {yPositionDatas[2]}};
+				this.initstateVectoreDatas = new double[][]{ {xPositionDatas[0]}, {yPositionDatas[0]},	{xPositionDatas[1]}, {yPositionDatas[1]},	{xPositionDatas[2]}, {yPositionDatas[2]}};
 			}else if (currentMeasurement.length == 1) {
 				xPositionDatas = kinematicsCalculate(this.xPositionArray[0], this.xPositionArray[1], this.xPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
-				this.initKinematicDatas = new double[][]{ {xPositionDatas[0]},	{xPositionDatas[1]},	{xPositionDatas[2]}};
+				this.initstateVectoreDatas = new double[][]{ {xPositionDatas[0]},	{xPositionDatas[1]},	{xPositionDatas[2]}};
 			}else {
 				System.err.println("ERR. Check your Measurement Length. TRUE input : 0< Measurement_Length <4");
 			}
@@ -87,21 +93,21 @@ public class KF_SniffMeasurement  implements  IKFinit{
 		return (vB - vA)/(tC - tA);
 	}
 	
-	@Override
-	public List<double[][]> getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
+	@Override 
+	public boolean getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.operationalDimension = currentMeasurement.length * 3; 
 				
 		mainKFInitationForStateVector(currentMeasurement, currentMeasurementTime);
 		mainKFInitationForCovarianceMatrix();	
-		
-		XandPmatrices.add(0, this.initKinematicDatas);
-		XandPmatrices.add(1, this.initCovarianceDatas);
-		
-		return XandPmatrices;
+			
+		return this.validity;
 	}
 	
-	public double[][] getStateVector() {return this.initKinematicDatas;};
+	
+	public double[][] getStateVector() {return this.initstateVectoreDatas;};
 	
 	public double[][] getCovarianceMatrix() {return  this.initCovarianceDatas;};
+	
+	public boolean getValidity() { return this.validity;}; 
 	
 }
