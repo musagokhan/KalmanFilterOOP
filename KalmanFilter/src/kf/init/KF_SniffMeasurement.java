@@ -1,9 +1,7 @@
 package kf.init;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
+import java.util.List;
 import kf.model.IKFinit;
 import kf.utils.KFConstant;
 
@@ -19,7 +17,7 @@ public class KF_SniffMeasurement  implements  IKFinit{
 	private double[] yPositionArray  = new double[KFConstant.sniffMeasNumForInitStateVector];
 	private double[] zPositionArray  = new double[KFConstant.sniffMeasNumForInitStateVector];
 	
-	//List<double[][]> XandPmatrices = new ArrayList<>();
+	private List<double[][]> XandPmatrices;
 
 	
 	public KF_SniffMeasurement() {}
@@ -90,11 +88,16 @@ public class KF_SniffMeasurement  implements  IKFinit{
 	}
 	
 	@Override
-	public void getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
+	public List<double[][]> getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.operationalDimension = currentMeasurement.length * 3; 
 				
 		mainKFInitationForStateVector(currentMeasurement, currentMeasurementTime);
 		mainKFInitationForCovarianceMatrix();	
+		
+		XandPmatrices.add(0, this.initKinematicDatas);
+		XandPmatrices.add(1, this.initCovarianceDatas);
+		
+		return XandPmatrices;
 	}
 	
 	public double[][] getStateVector() {return this.initKinematicDatas;};

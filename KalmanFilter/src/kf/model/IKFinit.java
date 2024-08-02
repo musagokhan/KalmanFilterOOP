@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface IKFinit {
 	
-	public void getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime);
+	public List<double[][]>  getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime);
 
 	// Constant for initialize
 	public static final double gapPercet = 0.1; 

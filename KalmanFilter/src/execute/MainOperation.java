@@ -1,7 +1,10 @@
 package execute;
 import java.util.Arrays;
+import java.util.List;
+
 import kf.KF;
 import kf.utils.*;
+import kf.init.KFInitManager;
 import kf.init.KF_BatchEst;
 import kf.init.KF_RandomAssing;
 import kf.init.KF_SniffMeasurement;
@@ -22,14 +25,16 @@ public class MainOperation {
 		KF track0 = null; 
 		EKF track1 = null; 
 		boolean firstStepFlag = true;
+		List<double[][]>  XandPmatrices;
 		
 		double[][] stateVector;
 		double[][] covarianceMatrix;
 		
 		// use for initation
-		KF_SniffMeasurement kFInitationWithSnifMeas = new KF_SniffMeasurement();
-		KF_RandomAssing kFInitationWithRandom = new KF_RandomAssing();
-		KF_BatchEst kFInitationWithBatchEst = new KF_BatchEst();	
+//		KF_SniffMeasurement kFInitationWithSnifMeas = new KF_SniffMeasurement();
+//		KF_RandomAssing kFInitationWithRandom = new KF_RandomAssing();
+//		KF_BatchEst kFInitationWithBatchEst = new KF_BatchEst();
+		KFInitManager kfInitManager = new KFInitManager();
 		
 		EKF_SniffMeasurement ekFInitationWithSnifMeas = new EKF_SniffMeasurement(); //31072024
 		EKF_RandomAssing ekFInitationWithRandom = new EKF_RandomAssing();
@@ -50,9 +55,9 @@ public class MainOperation {
 				measurementCovariance = measurementDatas.getMeasurementCovariance();
 			
 				// --- KF init Assing  START (3 options) ---//
-				kFInitationWithSnifMeas.getMainKFInitation(measurement , measurementTime);
-				stateVector = kFInitationWithSnifMeas.getStateVector();
-				covarianceMatrix = kFInitationWithSnifMeas.getCovarianceMatrix();
+				XandPmatrices = kfInitManager.initManager("RandomAssing", measurement, measurementTime);
+				stateVector = XandPmatrices.get(0);
+				covarianceMatrix = XandPmatrices.get(1);
 				
 //				kFInitationWithRandom.getMainKFInitation(measurement , measurementTime);
 //				stateVector = kFInitationWithRandom.getStateVector();

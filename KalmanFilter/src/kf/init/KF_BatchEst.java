@@ -1,9 +1,7 @@
 package kf.init;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import kf.model.IKFinit;
 import kf.utils.KFConstant;
 import kf.utils.KFMathOperation;
@@ -18,7 +16,7 @@ public class KF_BatchEst implements  IKFinit{
 	private double[][] measurement;
 	private double[][] initstateVectoreDatas; 
 	private double[][] initCovarianceDatas;
-	//List<double[][]> XandPmatrices = new ArrayList<>();
+	private List<double[][]> XandPmatrices;
 	
 	
 	private void stateVectorEstimate() {
@@ -52,7 +50,7 @@ public class KF_BatchEst implements  IKFinit{
 	
 		
 	@Override
-	public void getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
+	public List<double[][]>  getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.dimension = currentMeasurement.length;		
 		this.H_matrix = KFConstant.getHmatrix(true, this.dimension);
 		this.H_tr_matrix = KFConstant.getHmatrix(false, this.dimension);
@@ -62,6 +60,11 @@ public class KF_BatchEst implements  IKFinit{
 
 		covarianceMatrixEstimate();
 		stateVectorEstimate();
+		
+		XandPmatrices.add(0, this.initstateVectoreDatas);
+		XandPmatrices.add(1, this.initCovarianceDatas);
+		
+		return XandPmatrices;
 	}
 	
 	public double[][] getStateVector() {return this.initstateVectoreDatas;};

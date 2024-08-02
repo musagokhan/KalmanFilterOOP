@@ -1,6 +1,5 @@
 package kf.init;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -28,7 +27,7 @@ public class KF_RandomAssing implements  IKFinit{
 	private double[][] initstateVectoreDatas; 
 	private double[][] initCovarianceDatas;
 	
-	//List<double[][]> XandPmatrices = new ArrayList<>();
+	private List<double[][]> XandPmatrices;
 	
 	private void XCoordinateEstimateCalculation(){
 		Random random = new Random();
@@ -114,13 +113,19 @@ public class KF_RandomAssing implements  IKFinit{
 	
 		
 	@Override
-	public void getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
+	public List<double[][]>  getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.dimension = currentMeasurement.length;		
 		this.XcoorMeasurement = currentMeasurement[0][0];
 		this.YcoorMeasurement = currentMeasurement[1][0];
 		this.ZcoorMeasurement = currentMeasurement[2][0];
 		stateVectorEstimate(); 
 		covarianceMatrixEstimate();
+		
+		XandPmatrices.add(0, this.initstateVectoreDatas);
+		XandPmatrices.add(1, this.initCovarianceDatas);
+		
+		return XandPmatrices;
+		
 	}
 	
 	public double[][] getStateVector() {return this.initstateVectoreDatas;};
