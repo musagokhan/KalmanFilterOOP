@@ -50,7 +50,7 @@ public class EKF_BatchEst implements  IEKFinit {
 	}
 	
 	@Override
-	public void getMainEKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
+	public boolean getMainEKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.dimension = currentMeasurement.length;			
 		this.H_matrix = EKFConstant.getHmatrix(currentMeasurement, true, this.dimension);
 		this.H_tr_matrix = EKFConstant.getHmatrix(currentMeasurement, false, this.dimension);
@@ -60,6 +60,8 @@ public class EKF_BatchEst implements  IEKFinit {
 		
 		covarianceMatrixEstimate();
 		stateVectorEstimate();	
+		
+		return true; // everytime X and P calculae possible so TRUE
 	}
 	
 	public double[][] getStateVector() {return this.initstateVectoreDatas;};

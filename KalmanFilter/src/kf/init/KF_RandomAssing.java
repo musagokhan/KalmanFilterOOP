@@ -1,5 +1,7 @@
 package kf.init;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import kf.model.IKFinit;
 import kf.utils.KFConstant;
@@ -25,6 +27,7 @@ public class KF_RandomAssing implements  IKFinit{
 	private double[][] initstateVectoreDatas; 
 	private double[][] initCovarianceDatas;
 	
+	List<double[][]> XandPmatrices = new ArrayList<>();
 	
 	private void XCoordinateEstimateCalculation(){
 		Random random = new Random();
@@ -110,7 +113,7 @@ public class KF_RandomAssing implements  IKFinit{
 	
 		
 	@Override
-	public boolean  getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
+	public boolean getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.dimension = currentMeasurement.length;		
 		this.XcoorMeasurement = currentMeasurement[0][0];
 		this.YcoorMeasurement = currentMeasurement[1][0];

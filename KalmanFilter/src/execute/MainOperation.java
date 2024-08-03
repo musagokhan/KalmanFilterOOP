@@ -9,6 +9,7 @@ import kf.init.KF_BatchEst;
 import kf.init.KF_RandomAssing;
 import kf.init.KF_SniffMeasurement;
 import ekf.EKF;
+import ekf.init.EKFInitManager;
 import ekf.init.EKF_BatchEst;
 import ekf.init.EKF_RandomAssing;
 import ekf.init.EKF_SniffMeasurement;
@@ -20,7 +21,7 @@ public class MainOperation {
 
 		System.out.println("--- WORK Start ---");	
 		MeasurementManagement measurementDatas = new MeasurementManagement();
-		String FilterType =    "KalmanFilter"; // "ExtendedKalmanFilter"; //  
+		String FilterType =    "ExtendedKalmanFilter"; // "KalmanFilter"; //   
 		
 		KF track0 = null; 
 		EKF track1 = null; 
@@ -31,15 +32,10 @@ public class MainOperation {
 		double[][] covarianceMatrix;
 		
 		// use for initation
-//		KF_SniffMeasurement kFInitationWithSnifMeas = new KF_SniffMeasurement();
-//		KF_RandomAssing kFInitationWithRandom = new KF_RandomAssing();
-//		KF_BatchEst kFInitationWithBatchEst = new KF_BatchEst();
+
 		KFInitManager kfInitManager = new KFInitManager();
-		
-		EKF_SniffMeasurement ekFInitationWithSnifMeas = new EKF_SniffMeasurement(); //31072024
-		EKF_RandomAssing ekFInitationWithRandom = new EKF_RandomAssing();
-		EKF_BatchEst ekFInitationWithBatchEst = new EKF_BatchEst();
-		
+		EKFInitManager ekfInitManager = new EKFInitManager();
+
 		for (int workStep=0; workStep < KFConstant.lastWorkStep ; workStep++) {
 			
 			double measurementTime;
@@ -85,23 +81,20 @@ public class MainOperation {
 			
 				
 			} else if (FilterType == "ExtendedKalmanFilter") {
+				
 				measurementDatas.createMeasurementGlobal(workStep);
 				measurement = measurementDatas.getMeasurement();
 				measurementTime = measurementDatas.getMeasurementTime();
 				measurementCovariance = measurementDatas.getMeasurementCovariance();
 				
 				// --- EKF init Assing  START (3 options) ---//					
-				ekFInitationWithSnifMeas.getMainEKFInitation(measurement , measurementTime);
-				stateVector = ekFInitationWithSnifMeas.getStateVector();
-				covarianceMatrix = ekFInitationWithSnifMeas.getCovarianceMatrix();
-				
-//				ekFInitationWithRandom.getMainEKFInitation(measurement , measurementTime);
-//				stateVector = ekFInitationWithRandom.getStateVector();
-//				covarianceMatrix = ekFInitationWithRandom.getCovarianceMatrix();
-				
-//				ekFInitationWithBatchEst.getMainEKFInitation(measurement , measurementTime);
-//				stateVector = ekFInitationWithBatchEst.getStateVector();
-//				covarianceMatrix = ekFInitationWithBatchEst.getCovarianceMatrix();
+				if ( ekfInitManager.initManager("SniffMeasurement", measurement, measurementTime) ) {
+					stateVector = ekfInitManager.getStateVector();
+					covarianceMatrix = ekfInitManager.getCovarianceMatrix();
+				} else {
+					stateVector = null;
+					covarianceMatrix = null;
+				}
 				// --- EKF init Assing Stop ---//	
 								
 				// E.Kalman Start //

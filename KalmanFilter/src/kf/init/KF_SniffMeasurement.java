@@ -1,8 +1,6 @@
 package kf.init;
 
 
-import java.util.Arrays;
-import java.util.List;
 import kf.model.IKFinit;
 import kf.utils.KFConstant;
 

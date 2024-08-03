@@ -40,7 +40,6 @@ public class EKF_RandomAssing implements  IEKFinit{
 		this.YcoorEstimate = (this.YcoorMeasurement * (1 + gapPercet) - this.YcoorMeasurement * (1- gapPercet)) * random.nextDouble();
 	}
 	
-
 	private void ZCoordinateEstimateCalculation(){
 		Random random = new Random();
 		this.ZcoorEstimate = (this.ZcoorMeasurement * (1 + gapPercet) - this.ZcoorMeasurement * (1- gapPercet)) * random.nextDouble();
@@ -114,13 +113,15 @@ public class EKF_RandomAssing implements  IEKFinit{
 	}
 	
 	@Override
-	public void getMainEKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {	
+	public boolean getMainEKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {	
 		this.dimension = currentMeasurement.length;		
 		this.XcoorMeasurement = currentMeasurement[0][0];
 		this.YcoorMeasurement = currentMeasurement[1][0];
 		this.ZcoorMeasurement = currentMeasurement[2][0];
 		stateVectorEstimate();
-		covarianceMatrixEstimate();		
+		covarianceMatrixEstimate();	
+		
+		return true; // everytime X and P calculae possible so TRUE
 	}
 	
 	public double[][] getStateVector() {return this.initstateVectoreDatas;};

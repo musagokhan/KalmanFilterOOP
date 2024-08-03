@@ -12,6 +12,7 @@ public class EKF_SniffMeasurement implements  IEKFinit{
 	private double[][] initCovarianceDatas;
 	private int operationalDimension;
 	private int storage =0;
+	private boolean validity;
 	
 	private double[] timeArray       = new double[EKFConstant.sniffMeasNumForInitStateVector];
 	private double[] xPositionArray  = new double[EKFConstant.sniffMeasNumForInitStateVector];
@@ -25,7 +26,6 @@ public class EKF_SniffMeasurement implements  IEKFinit{
 
 	private void mainEKFInitationForStateVector(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.storage = this.storage + 1;
-		
 		if (this.storage < (EKFConstant.sniffMeasNumForInitStateVector + 1) ) { //preparing phase +1 next for FOR_LOOP
 			if (currentMeasurement.length == 3) {	
 				this.xPositionArray[this.storage -1] =  currentMeasurement[0][0];
@@ -43,7 +43,11 @@ public class EKF_SniffMeasurement implements  IEKFinit{
 			this.initKinematicDatas = null;
 			this.initCovarianceDatas = null;
 			
+			this.validity = false;
+			
 		} else {
+			
+			this.validity = true;
 			double[] xPositionDatas = null;
 			double[] yPositionDatas = null;
 			double[] zPositionDatas = null;
@@ -90,11 +94,13 @@ public class EKF_SniffMeasurement implements  IEKFinit{
 	}
 	
 	@Override
-	public void getMainEKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
+	public boolean getMainEKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.operationalDimension = currentMeasurement.length * 3; 
 				
 		mainEKFInitationForStateVector(currentMeasurement, currentMeasurementTime);
 		mainEKFInitationForCovarianceMatrix();
+		
+		return this.validity;
 	}
 	
 	public double[][] getStateVector() {return this.initKinematicDatas;};
