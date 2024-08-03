@@ -31,13 +31,10 @@ public class KFInitManager {
 		
 		if (selectionType == "SniffMeasurement") {
 			sniffMeasurement();
-			System.out.println("SniffMeasurement ici ");
 		}else if (selectionType == "RandomAssing") {
 			randomAssing();
-			System.out.println("SniffMeasurement ici ");
 		}else if (selectionType == "BatchEst") {
 			batchEst();
-			System.out.println("BatchEst ici ");
 		}else {
 			System.err.println("ERROR : Select initation type form list: SniffMeasurement - RandomAssing - BatchEst ");
 		}

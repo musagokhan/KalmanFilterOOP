@@ -21,7 +21,7 @@ public class MeasurementManagement {
 	
 	
 	
-	public void createMeasurementCartesian(int step) {
+	public void createMeasurementCartesian() {
 		
 		this.currentTime = createTimeBrand.getTimeCalculation(); 
 		// --- Create Measurement Start ---//
@@ -38,7 +38,7 @@ public class MeasurementManagement {
 	}
 	
 	
-	public void createMeasurementGlobal(int step) {
+	public void createMeasurementGlobal() {
 		
 		this.currentTime = createTimeBrand.getTimeCalculation(); 
 		// --- Create Measurement Start ---//
