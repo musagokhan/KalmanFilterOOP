@@ -24,24 +24,7 @@ public class KF {
 		this.operationalDimension = this.stateVector.length / KFConstant.diffParametersNumberInStateVector;
 	}
 	
-	public double[][] getStateVector(){return this.stateVector;}
-	public double[][] getCovarianceMatrix(){return this.covarianceMatrix;}
-	
-	private void KFPredictedForStateVector(double deltaTime) {		
-//        System.out.println("Before KF_Pre stateVector    : " +  Arrays.deepToString(this.stateVector));
-        this.stateVector = KFMathOperation.getmultiplyMatrices(this.Amatrix, this.stateVector);
-//        System.out.println("After KF_Pre  stateVector    : " +  Arrays.deepToString(this.stateVector));	
-	}	
-	
-	private void KFPredictedForCovarianceMatrix(double deltaTime) {	
-		// P "k+1|k"  = A"k" P"k" A^t"k" + Q"k"
-//		System.out.println("Before KF_Pre covarianceMatrix    : " +  Arrays.deepToString(this.covarianceMatrix));
-		double[][] tempCM = KFMathOperation.getmultiplyMatrices(this.Amatrix, this.covarianceMatrix);	
-		tempCM = KFMathOperation.getmultiplyMatrices(tempCM, this.A_trmatrix);
-		this.covarianceMatrix = KFMathOperation.getAddMatrices(tempCM, KFConstant.getQMatrixForPrediction(this.operationalDimension));		
-//		System.out.println("After KF_Pre  covarianceMatrix    : " +  Arrays.deepToString(this.covarianceMatrix));	
-	}
-		
+
 	private double[][] inovationCalculate(double[][] measurement ) {
 		double[][]  predictedMeasurement =  KFMathOperation.getmultiplyMatrices(this.Hmatrix, this.stateVector); // H*x	
 		this.inovationMatrix = KFMathOperation.getSubtractionMatrices(measurement, predictedMeasurement);  // z - z'
@@ -88,6 +71,25 @@ public class KF {
 //		MathOperation.maxtixLengthInfo(this.Kmatrix);
 	}
 	
+	
+	
+	private void KFPredictedForStateVector(double deltaTime) {		
+//      System.out.println("Before KF_Pre stateVector    : " +  Arrays.deepToString(this.stateVector));
+      this.stateVector = KFMathOperation.getmultiplyMatrices(this.Amatrix, this.stateVector);
+//      System.out.println("After KF_Pre  stateVector    : " +  Arrays.deepToString(this.stateVector));	
+	}	
+	
+	private void KFPredictedForCovarianceMatrix(double deltaTime) {	
+		// P "k+1|k"  = A"k" P"k" A^t"k" + Q"k"
+//		System.out.println("Before KF_Pre covarianceMatrix    : " +  Arrays.deepToString(this.covarianceMatrix));
+		double[][] tempCM = KFMathOperation.getmultiplyMatrices(this.Amatrix, this.covarianceMatrix);	
+		tempCM = KFMathOperation.getmultiplyMatrices(tempCM, this.A_trmatrix);
+		this.covarianceMatrix = KFMathOperation.getAddMatrices(tempCM, KFConstant.getQMatrixForPrediction(this.operationalDimension));		
+//		System.out.println("After KF_Pre  covarianceMatrix    : " +  Arrays.deepToString(this.covarianceMatrix));	
+	}
+	
+	
+	
 	private void KFupdateStateVectorCalculator() {	
 		
 //		System.out.println("");
@@ -113,6 +115,8 @@ public class KF {
 //		MathOperation.maxtixLengthInfo(this.covarianceMatrix);
 	}
 	
+	
+	
 	public void KFPredicted(double deltaTime) {
 		this.Amatrix = KFConstant.getMatrixA(true, this.operationalDimension, deltaTime);
 		this.A_trmatrix = KFConstant.getMatrixA(false, this.operationalDimension, deltaTime);	
@@ -136,10 +140,9 @@ public class KF {
 		KFUpdate(measurement, measurementCovariance );
 	}
 		
- 	public String toString() {
-		return  " X :" + Arrays.deepToString(this.stateVector)+
-				" /-/" +
-				" P : " + Arrays.deepToString(this.covarianceMatrix); 
-	}
+	
+	
+	public double[][] getStateVector(){return this.stateVector;}
+	public double[][] getCovarianceMatrix(){return this.covarianceMatrix;}
 	
 }

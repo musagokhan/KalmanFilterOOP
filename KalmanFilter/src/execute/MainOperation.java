@@ -22,7 +22,7 @@ public class MainOperation {
 
 		for (int workStep=0; workStep < ExecuterConstants.lastWorkStep ; workStep++) {
 			System.out.println(workStep + ". Adim");
-			runKF.runKF(measurementDatas, kfInitManager);
+			//runKF.runKF(measurementDatas, kfInitManager);
 			runEKF.runEKF(measurementDatas, ekfInitManager);
 		}	
 		

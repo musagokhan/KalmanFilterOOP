@@ -1,5 +1,5 @@
 package execute.utils;
 
 public class ExecuterConstants {
-	public static final int lastWorkStep = 100;
+	public static final int lastWorkStep = 5;
 }
