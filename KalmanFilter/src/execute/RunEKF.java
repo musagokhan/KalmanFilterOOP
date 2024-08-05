@@ -22,24 +22,28 @@ public class RunEKF {
 	public RunEKF() {}
 	
 	public void runEKF (MeasurementManagement measurementDatas, EKFInitManager ekfInitManager) {		
-						
+				
+		// Meas Sniff start
 		measurementDatas.createMeasurementGlobal();
 		this.measurement = measurementDatas.getMeasurement();
 		this.measurementTime = measurementDatas.getMeasurementTime();
 		this.measurementCovariance = measurementDatas.getMeasurementCovariance();
-			
+		// Meas Sniff stop	
 		this.measurementCartesian = CoordinateSystemConvert.glabalToCartesian(this.measurement);
 		
+		
 		if (stateVector == null) {
+			System.out.println("RunEKF.java : this.measurement          : " + Arrays.deepToString(this.measurement) );
+			System.out.println("RunEKF.java : this.measurementCartesian : " + Arrays.deepToString(this.measurementCartesian) );
 		// --- EKF init Assing  START (3 options : SniffMeasurement - RandomAssing - BatchEst) ---//
 			if ( ekfInitManager.initManager("SniffMeasurement", this.measurementCartesian, this.measurementTime) ) { // run only 1 time
-				this.stateVector = ekfInitManager.getStateVector();
+				this.stateVector = ekfInitManager.getStateVector();   // form :  x, Vx, ax, y..... 
 				this.covarianceMatrix = ekfInitManager.getCovarianceMatrix();
-				System.out.println("////////////////////");
-				System.out.println("this.measurement : " + Arrays.deepToString(this.measurement) );
-				System.out.println("this.measurementCartesian : " + Arrays.deepToString(this.measurementCartesian) );
-				System.out.println("this.stateVector : " + Arrays.deepToString(this.stateVector) );
-				System.out.println("////////////////////");
+				System.out.println("RunEKF.java : ////////////////////");
+				
+				System.out.println("RunEKF.java : this.measurementCartesian : " + Arrays.deepToString(this.measurementCartesian) );
+				System.out.println("RunEKF.java : this.stateVector : " + Arrays.deepToString(this.stateVector) );
+				System.out.println("RunEKF.java : ////////////////////");
 				track0 = new EKF(stateVector, covarianceMatrix);
 			} else {
 				this.stateVector = null;

@@ -49,8 +49,6 @@ public class MeasurementManagement {
 		this.deltaT = this.measurementTime - this.deltaT;			
 		
 		this.measurementCovariance = MeasurementParameters.RMatrixCartesian();
-		
-		
 		// --- Create Measurement Stop ---//		
 	}
 	
