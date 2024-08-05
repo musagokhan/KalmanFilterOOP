@@ -3,10 +3,13 @@ package kf.init;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import kf.model.ABSKFInit;
 import kf.model.IKFinit;
 import kf.utils.KFConstant;
 
-public class KF_RandomAssing implements  IKFinit{
+//public class KF_RandomAssing implements  IKFinit{
+public class KF_RandomAssing extends ABSKFInit implements IKFinit{
 	
 	private int dimension;
 	private double XcoorEstimate;
@@ -28,6 +31,9 @@ public class KF_RandomAssing implements  IKFinit{
 	private double[][] initCovarianceDatas;
 	
 	List<double[][]> XandPmatrices = new ArrayList<>();
+	
+	public KF_RandomAssing() {}
+	
 	
 	private void XCoordinateEstimateCalculation(){
 		Random random = new Random();
@@ -74,10 +80,9 @@ public class KF_RandomAssing implements  IKFinit{
 		this.ZaccelerationEstimate = (ZmaxAcceleration - ZminAcceleration) * random.nextDouble();
 	}
 	
-	public KF_RandomAssing() {}
 	
-	
-	private void stateVectorEstimate () {
+	@Override
+	protected void stateVectorEstimate() {
 		
 		if (this.dimension == 3) {
 			XCoordinateEstimateCalculation();
@@ -103,7 +108,8 @@ public class KF_RandomAssing implements  IKFinit{
 													  {this.ZcoorEstimate}, {this.ZspeedEstimate}, {this.ZaccelerationEstimate} };
 	}
 	
-	private void covarianceMatrixEstimate (){
+	@Override
+	protected void covarianceMatrixEstimate() {
 		int CMlength = this.dimension * KFConstant.diffParametersNumberInStateVector;
 		this.initCovarianceDatas = new double[CMlength][CMlength];
 		for (int i = 0; i < CMlength; i++) {
@@ -113,7 +119,7 @@ public class KF_RandomAssing implements  IKFinit{
 	
 		
 	@Override
-	public boolean getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
+	public boolean mainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.dimension = currentMeasurement.length;		
 		this.XcoorMeasurement = currentMeasurement[0][0];
 		this.YcoorMeasurement = currentMeasurement[1][0];
@@ -123,6 +129,8 @@ public class KF_RandomAssing implements  IKFinit{
 		
 		return true; // everytime X and P calculae possible so TRUE
 	}
+	
+	
 	
 	public double[][] getStateVector() {return this.initstateVectoreDatas;};
 	

@@ -1,16 +1,20 @@
 package kf.init;
 
 
+import kf.model.ABSKFInit;
 import kf.model.IKFinit;
 import kf.utils.KFConstant;
 
-public class KF_SniffMeasurement  implements  IKFinit{
+public class KF_SniffMeasurement  extends ABSKFInit {
 	
 	private double[][] initstateVectoreDatas;
 	private double[][] initCovarianceDatas;
 	private int operationalDimension;
 	private int storage =0;
 	private boolean validity;
+	
+	private double[][] currentMeasurement;
+	private double currentMeasurementTime;
 	
 	private double[] timeArray       = new double[KFConstant.sniffMeasNumForInitStateVector];
 	private double[] xPositionArray  = new double[KFConstant.sniffMeasNumForInitStateVector];
@@ -21,61 +25,6 @@ public class KF_SniffMeasurement  implements  IKFinit{
 	
 	public KF_SniffMeasurement() {}
 	
-	private void mainKFInitationForStateVector(double[][] currentMeasurement, double currentMeasurementTime) {
-		this.storage = this.storage + 1;
-		if (this.storage < (KFConstant.sniffMeasNumForInitStateVector + 1) ) { //preparing phase +1 next for FOR_LOOP
-			if (currentMeasurement.length == 3) {	
-				this.xPositionArray[this.storage -1] =  currentMeasurement[0][0];
-				this.yPositionArray[this.storage -1] = currentMeasurement[1][0];
-				this.zPositionArray[this.storage -1] = currentMeasurement[2][0];
-			}else if (currentMeasurement.length == 2) {
-				this.xPositionArray[this.storage -1] =  currentMeasurement[0][0];
-				this.yPositionArray[this.storage -1] = currentMeasurement[1][0];
-			}else if (currentMeasurement.length == 1) {
-				this.xPositionArray[this.storage -1] =  currentMeasurement[0][0];
-			}else {
-				System.err.println("ERR. Check your Measurement Length. TRUE input : 0< Measurement_Length <4");
-			}	
-			
-			this.timeArray[this.storage -1] = currentMeasurementTime;
-			this.initstateVectoreDatas  = null;
-			this.initCovarianceDatas = null;
-			
-			this.validity = false;
-			
-		} else {
-			
-			this.validity = true;
-			double[] xPositionDatas = null;
-			double[] yPositionDatas = null;
-			double[] zPositionDatas = null;
-			
-			if (currentMeasurement.length == 3) {
-				xPositionDatas = kinematicsCalculate(this.xPositionArray[0], this.xPositionArray[1], this.xPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
-				yPositionDatas = kinematicsCalculate(this.yPositionArray[0], this.yPositionArray[1], this.yPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
-				zPositionDatas = kinematicsCalculate(this.zPositionArray[0], this.zPositionArray[1], this.zPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
-				this.initstateVectoreDatas = new double[][]{ {xPositionDatas[0]}, {yPositionDatas[0]}, {zPositionDatas[0]},	{xPositionDatas[1]}, {yPositionDatas[1]}, {zPositionDatas[1]},	{xPositionDatas[2]}, {yPositionDatas[2]}, {zPositionDatas[2]}};
-			}else if (currentMeasurement.length == 2) {
-				xPositionDatas = kinematicsCalculate(this.xPositionArray[0], this.xPositionArray[1], this.xPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
-				yPositionDatas = kinematicsCalculate(this.yPositionArray[0], this.yPositionArray[1], this.yPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
-				this.initstateVectoreDatas = new double[][]{ {xPositionDatas[0]}, {yPositionDatas[0]},	{xPositionDatas[1]}, {yPositionDatas[1]},	{xPositionDatas[2]}, {yPositionDatas[2]}};
-			}else if (currentMeasurement.length == 1) {
-				xPositionDatas = kinematicsCalculate(this.xPositionArray[0], this.xPositionArray[1], this.xPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
-				this.initstateVectoreDatas = new double[][]{ {xPositionDatas[0]},	{xPositionDatas[1]},	{xPositionDatas[2]}};
-			}else {
-				System.err.println("ERR. Check your Measurement Length. TRUE input : 0< Measurement_Length <4");
-			}
-
-		}
-		
-	}
-	
-	private void mainKFInitationForCovarianceMatrix (){
-		this.initCovarianceDatas = new double[this.operationalDimension][this.operationalDimension ];
-		for (int i = 0; i < this.operationalDimension; i++) {
-			this.initCovarianceDatas[i][i] = 1;
-		}
-	}
 	
  	private double[] kinematicsCalculate (double xA, double xB, double xC, double tA, double tB, double tC) {
 		double v1 = (xB - xA)/(tB - tA);
@@ -91,21 +40,88 @@ public class KF_SniffMeasurement  implements  IKFinit{
 		return (vB - vA)/(tC - tA);
 	}
 	
+	
+	
+	@Override 	
+	protected void stateVectorEstimate(){
+		this.storage = this.storage + 1;
+		if (this.storage < (KFConstant.sniffMeasNumForInitStateVector + 1) ) { //preparing phase +1 next for FOR_LOOP
+			if (this.currentMeasurement.length == 3) {	
+				this.xPositionArray[this.storage -1] = this.currentMeasurement[0][0];
+				this.yPositionArray[this.storage -1] = this.currentMeasurement[1][0];
+				this.zPositionArray[this.storage -1] = this.currentMeasurement[2][0];
+			}else if (this.currentMeasurement.length == 2) {
+				this.xPositionArray[this.storage -1] = this.currentMeasurement[0][0];
+				this.yPositionArray[this.storage -1] = this.currentMeasurement[1][0];
+			}else if (this.currentMeasurement.length == 1) {
+				this.xPositionArray[this.storage -1] =  this.currentMeasurement[0][0];
+			}else {
+				System.err.println("ERR. Check your Measurement Length. TRUE input : 0< Measurement_Length <4");
+			}	
+			
+			this.timeArray[this.storage -1] = this.currentMeasurementTime;
+			this.initstateVectoreDatas  = null;
+			this.initCovarianceDatas = null;
+			
+			this.validity = false;
+			
+		} else {
+			
+			this.validity = true;
+			double[] xPositionDatas = null;
+			double[] yPositionDatas = null;
+			double[] zPositionDatas = null;
+			
+			if (this.currentMeasurement.length == 3) {
+				xPositionDatas = kinematicsCalculate(this.xPositionArray[0], this.xPositionArray[1], this.xPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
+				yPositionDatas = kinematicsCalculate(this.yPositionArray[0], this.yPositionArray[1], this.yPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
+				zPositionDatas = kinematicsCalculate(this.zPositionArray[0], this.zPositionArray[1], this.zPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
+				this.initstateVectoreDatas = new double[][]{ {xPositionDatas[0]}, {yPositionDatas[0]}, {zPositionDatas[0]},	{xPositionDatas[1]}, {yPositionDatas[1]}, {zPositionDatas[1]},	{xPositionDatas[2]}, {yPositionDatas[2]}, {zPositionDatas[2]}};
+			}else if (this.currentMeasurement.length == 2) {
+				xPositionDatas = kinematicsCalculate(this.xPositionArray[0], this.xPositionArray[1], this.xPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
+				yPositionDatas = kinematicsCalculate(this.yPositionArray[0], this.yPositionArray[1], this.yPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
+				this.initstateVectoreDatas = new double[][]{ {xPositionDatas[0]}, {yPositionDatas[0]},	{xPositionDatas[1]}, {yPositionDatas[1]},	{xPositionDatas[2]}, {yPositionDatas[2]}};
+			}else if (this.currentMeasurement.length == 1) {
+				xPositionDatas = kinematicsCalculate(this.xPositionArray[0], this.xPositionArray[1], this.xPositionArray[2] , this.timeArray[0], this.timeArray[1], this.timeArray[2]);
+				this.initstateVectoreDatas = new double[][]{ {xPositionDatas[0]},	{xPositionDatas[1]},	{xPositionDatas[2]}};
+			}else {
+				System.err.println("ERR. Check your Measurement Length. TRUE input : 0< Measurement_Length <4");
+			}
+
+		}
+		
+	}
+	
 	@Override 
-	public boolean getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
+	protected void covarianceMatrixEstimate (){
+		this.initCovarianceDatas = new double[this.operationalDimension][this.operationalDimension ];
+		for (int i = 0; i < this.operationalDimension; i++) {
+			this.initCovarianceDatas[i][i] = 1;
+		}
+	}
+	
+	@Override 
+	protected boolean mainKFInitation(double[][] currentMeasurement, double currentMeasurementTime) {
 		this.operationalDimension = currentMeasurement.length * 3; 
+		this.currentMeasurement = currentMeasurement;
+		this.currentMeasurementTime = currentMeasurementTime;
 				
-		mainKFInitationForStateVector(currentMeasurement, currentMeasurementTime);
-		mainKFInitationForCovarianceMatrix();	
+		stateVectorEstimate();
+		covarianceMatrixEstimate();	
 			
 		return this.validity;
 	}
+	
+	
 	
 	
 	public double[][] getStateVector() {return this.initstateVectoreDatas;};
 	
 	public double[][] getCovarianceMatrix() {return  this.initCovarianceDatas;};
 	
-	public boolean getValidity() { return this.validity;}; 
+	public boolean getValidity() { return this.validity;}
+
+
+
 	
 }

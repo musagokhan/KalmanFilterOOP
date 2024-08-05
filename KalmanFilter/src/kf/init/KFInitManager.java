@@ -45,7 +45,7 @@ public class KFInitManager {
 	public List<double[][]> getXandPmatrices() {return this.XandPmatrices;};
 	
 	private void sniffMeasurement() {
-		if (kFInitationWithSnifMeas.getMainKFInitation(this.measurement , this.measurementTime)) {
+		if (kFInitationWithSnifMeas.mainKFInitation(this.measurement , this.measurementTime)) {
 			this.stateVector = kFInitationWithSnifMeas.getStateVector();
 			this.covarianceMatrix = kFInitationWithSnifMeas.getCovarianceMatrix();
 			this.validity = true;
@@ -56,7 +56,7 @@ public class KFInitManager {
 	}
 	
 	private void randomAssing() {
-		if (kFInitationWithRandom.getMainKFInitation(this.measurement , this.measurementTime) ) {
+		if (kFInitationWithRandom.mainKFInitation(this.measurement , this.measurementTime) ) {
 			this.stateVector = kFInitationWithRandom.getStateVector();
 			this.covarianceMatrix = kFInitationWithRandom.getCovarianceMatrix();
 			this.validity = true;
@@ -66,7 +66,7 @@ public class KFInitManager {
 	}
 	
 	private void batchEst() {
-		if (kFInitationWithBatchEst.getMainKFInitation(this.measurement , this.measurementTime) ) {
+		if (kFInitationWithBatchEst.mainKFInitation(this.measurement , this.measurementTime) ) {
 			this.stateVector = kFInitationWithBatchEst.getStateVector();
 			this.covarianceMatrix = kFInitationWithBatchEst.getCovarianceMatrix();
 			this.validity = true;

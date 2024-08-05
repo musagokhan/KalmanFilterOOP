@@ -2,7 +2,11 @@ package kf.model;
 
 public interface IKFinit {
 	
+	/*
 	public boolean getMainKFInitation(double[][] currentMeasurement, double currentMeasurementTime);
+	public void getStateVectorEstimate ();
+	public void getCovarianceMatrixEstimate();
+	*/
 
 	// Constant for initialize
 	public static final double gapPercet = 0.1; 
